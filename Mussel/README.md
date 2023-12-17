@@ -1,3 +1,3 @@
-# iPwny
+# Mussel
 
-First phase loader for Pwny written specifically for iOS versions vulnerable to CoreTrust bug.
+First phase loader for SeaShell written specifically for iOS versions vulnerable to CoreTrust bug.
