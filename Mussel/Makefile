@@ -22,23 +22,26 @@
 # SOFTWARE.
 #
 
-APP_DIR = Mussle.app
-IPA_FILE = Mussle.ipa
-SYSROOT = /Users/felix/Desktop/iOS-SDKs/iPhoneOS14.5.sdk
+APP_DIR  = Mussel.app
+IPA_FILE = Mussel.ipa
+SYSROOT  = /Users/felix/Desktop/iOS-SDKs/iPhoneOS14.5.sdk
 
-OBJS = $(addprefix $(APP_DIR)/,main Info.plist)
+OBJS  = $(addprefix $(APP_DIR)/,main Info.plist)
 ARCHS = -arch arm64 -arch arm64e
 
-.PHONY: all clean ipa
+.PHONY: all mussel clean ipa
 
-all: $(OBJS) ipa
+all: $(OBJS) $(TARGET) ipa
 
 $(APP_DIR)/main: main.m
 	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -framework UIKit -lobjc -o $@ $<
 	ldid -Sdeps/sign.plist $@
 
+$(APP_DIR)/mussel: mussel.m
+	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -framework UIKit -lobjc -o $@ $<
+
 $(APP_DIR)/Info.plist:
-	deps/plist.py $(APP_DIR)/Info.plist
+	python3 deps/plist.py 127.0.0.1 8888 $(APP_DIR)/Info.plist
 
 $(OBJS): | $(APP_DIR)
 

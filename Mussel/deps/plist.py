@@ -25,14 +25,16 @@ SOFTWARE.
 import sys
 import plistlib
 
+from pex.string import String
+
 app_name = 'Mussel'
 bundle_id = 'com.entysec.mussel'
 binary_name = 'main'
 
+
 def generate_plist(host, port):
     return {
-        'CFHost': host,
-        'CFPort': str(port),
+        'CFBundleBase64Hash': String().base64_string(f'{host}:{str(port)}', decode=True),
         'CFBundleDevelopmentRegion': 'en',
         'CFBundleDisplayName': app_name,
         'CFBundleExecutable': binary_name,
@@ -44,18 +46,21 @@ def generate_plist(host, port):
         'CFBundleSignature': '????',
         'CFBundleVersion': '1',
         'LSRequiresIPhoneOS': True,
-        'UISupportedInterfaceOrientations': ['UIInterfaceOrientationPortrait', 'UIInterfaceOrientationPortraitUpsideDown', 'UIInterfaceOrientationLandscapeLeft', 'UIInterfaceOrientationLandscapeRight']
+        'UISupportedInterfaceOrientations': [
+            'UIInterfaceOrientationPortrait',
+            'UIInterfaceOrientationPortraitUpsideDown',
+            'UIInterfaceOrientationLandscapeLeft',
+            'UIInterfaceOrientationLandscapeRight'
+        ]
     }
 
 
 def main():
-    plist_name = 'Info.plist'
-
-    if len(sys.argv) < 3:
-        print(f'Usage: {sys.argv[0]} <host> <port>')
+    if len(sys.argv) < 4:
+        print(f'Usage: {sys.argv[0]} <host> <port> <path>')
         return
 
-    with open(plist_name, 'wb') as f:
+    with open(sys.argv[3], 'wb') as f:
         plistlib.dump(generate_plist(sys.argv[1], sys.argv[2]), f)
 
 

@@ -28,7 +28,11 @@ import threading
 
 from badges import Badges, Tables
 
-from seashell.core.device import Device, DeviceHandler
+from seashell.core.device import (
+    Device,
+    DeviceHandler,
+    DeviceGenerator
+)
 
 
 class Console(cmd.Cmd):
@@ -61,6 +65,7 @@ class Console(cmd.Cmd):
         _.-`\\ \\ | / /'-._
        {_____`\\\\|//'_____}
                `-'
+  ~~ %bold%whiteApples are bad, shells are awesome!%end ~~
 
 --=[ %bold%whiteSeaShell Framework 1.0.0%end
 --=[ Developed by EntySec (%linehttps://entysec.com/%end)
@@ -104,6 +109,7 @@ class Console(cmd.Cmd):
             ('devices', 'Show connected devices.'),
             ('kill', 'Kill device.'),
             ('listen', 'Start listener in background.'),
+            ('ipa', 'Generate IPA.'),
             ('exit', 'Exit SeaShell Framework.'),
             ('help', 'Show available commands.'),
             ('interact', 'Interact with device.')
@@ -129,6 +135,33 @@ class Console(cmd.Cmd):
         """
 
         self.badges.print_empty('%clear', end='')
+
+    def do_ipa(self, args: str) -> None:
+        """ Generate IPA.
+
+        :param str args: arguments
+        :return None: None
+        """
+
+        args = args.split()
+
+        if len(args) < 3:
+            self.badges.print_usage("ipa <host> <port> <path> [name] [bundle_id]")
+            return
+
+        host, port, path = args[0], args[1], args[2]
+        generator = DeviceGenerator(host, port)
+
+        if len(args) >= 5:
+            name, bundle_id = args[3], args[4]
+
+            self.badges.print_process(f"Setting application {name} {bundle_id}...")
+            generator.set_name(name, bundle_id)
+
+        self.badges.print_process(f"Generating IPA to {path}...")
+        generator.generate(path)
+
+        self.badges.print_success(f"Save IPA to {path}/{generator.app_name}.ipa!")
 
     def do_listen(self, pair: str) -> None:
         """ Start TCP listener.
