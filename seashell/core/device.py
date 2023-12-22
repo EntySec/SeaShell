@@ -23,118 +23,17 @@ SOFTWARE.
 """
 
 import os
-import shutil
-import plistlib
 
 from pex.string import String
+
+from pex.arch.types import *
+from pex.platform.types import *
 from pex.proto.tcp import TCPListener
+
 from pwny.session import PwnySession
 
 from badges import Badges
 from colorscript import ColorScript
-
-
-class DeviceGenerator(object):
-    """ Subclass of seashell.core module.
-
-    This subclass of seashell.core module is intended for providing
-    an implementation of device generator.
-    """
-
-    def __init__(self, host: str, port: int) -> None:
-        """ Initialize device generator.
-
-        :param str host: host
-        :param int port: port
-        :return None: None
-        """
-
-        self.data_path = f'{os.path.dirname(os.path.dirname(__file__))}/data/'
-
-        self.host = host
-        self.port = port
-
-        self.hash = String().base64_string(
-            f'{host}:{str(port)}', decode=True)
-
-        self.app_name = 'Mussel'
-        self.bundle_id = 'com.entysec.mussel'
-        self.binary_name = 'main'
-
-    def set_name(self, name: str, bundle_id: str) -> None:
-        """ Set application name.
-
-        :param str name: name of application
-        :param str bundle_id: bundle id (e.g. com.entysec.dummy)
-        :return None: None
-        """
-
-        self.app_name = name.lower().title()
-        self.bundle_id = bundle_id
-
-    def generate(self, path: str) -> None:
-        """ Generate IPA.
-
-        :param str path: path to save ipa
-        :return None: None
-        """
-
-        self.craft_plist()
-        self.build_ipa(path)
-
-    def build_ipa(self, path: str) -> None:
-        """ Build IPA.
-
-        :param str path: path to save ipa
-        :return None: None
-        """
-
-        if not os.path.isdir(path):
-            path = os.path.split(path)[0]
-
-        payload = path + '/Payload/'
-        archive = path + '/' + self.app_name + '.ipa'
-
-        os.mkdir(payload)
-        shutil.copytree(self.data_path + 'Mussel.app', payload + 'Mussel.app')
-        shutil.make_archive(archive, 'zip', payload)
-        shutil.move(archive + '.zip', archive)
-        shutil.rmtree(payload)
-
-    def craft_plist(self) -> None:
-        """ Craft plist file.
-
-        :return None: None
-        """
-
-        plist_path = (
-                self.data_path +
-                'Mussel.app/Info.plist'
-        )
-
-        plist = {
-            'CFBundleBase64Hash': self.hash,
-            'CFBundleDevelopmentRegion': 'en',
-            'CFBundleDisplayName': self.app_name,
-            'CFBundleExecutable': self.binary_name,
-            'CFBundleIdentifier': self.bundle_id,
-            'CFBundleInfoDictionaryVersion': '6.0',
-            'CFBundleName': self.app_name,
-            'CFBundlePackageType': 'APPL',
-            'CFBundleShortVersionString': '1.0.0',
-            'CFBundleSignature': '????',
-            'CFBundleVersion': '1',
-            'LSRequiresIPhoneOS': True,
-            'UISupportedInterfaceOrientations': [
-                'UIInterfaceOrientationPortrait',
-                'UIInterfaceOrientationPortraitUpsideDown',
-                'UIInterfaceOrientationLandscapeLeft',
-                'UIInterfaceOrientationLandscapeRight'
-            ]
-        }
-
-        with open(plist_path, 'wb') as f:
-            plistlib.dump(plist, f)
 
 
 class Device(object):
@@ -154,8 +53,6 @@ class Device(object):
         super().__init__()
 
         self.badges = Badges()
-        self.tables = Tables()
-        self.loader = Loader()
 
         self.device = session
 
@@ -229,7 +126,7 @@ class DeviceHandler(TCPListener):
             'Host': self.address[0],
             'Port': self.port,
         })
-        session.open(self.client, loader=False)
+        session.open(self.client, loader=False, uuid=False)
 
         self.badges.print_success(
             f"New device connected {self.address[0]}:{str(self.port)}!")

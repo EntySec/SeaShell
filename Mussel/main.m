@@ -24,6 +24,8 @@
 
 #import <spawn.h>
 #import <UIKit/UIKit.h>
+#include <mach-o/dyld.h>
+#import <sys/sysctl.h>
 #import <Foundation/Foundation.h>
 
 #define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
@@ -49,12 +51,15 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
 {
     NSArray *CFBundleBase64Hash;
     NSDictionary *dictionary;
+    NSString *path;
 
     dictionary = [self readInfoPlist];
     CFBundleBase64Hash = @[dictionary[@"CFBundleBase64Hash"]];
 
-    NSLog(@"[%s] Will connect to %@\n", __PRETTY_FUNCTION__, CFBundleBase64Hash[0]);
-    return [self spawnProcess:@"/var/mobile/main" args:CFBundleBase64Hash];
+    path = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"mussel"];
+
+    NSLog(@"[%s] Will connect to %@ %@\n", __PRETTY_FUNCTION__, CFBundleBase64Hash[0], path);
+    return [self spawnProcess:path args:CFBundleBase64Hash];
 }
 
 -(int)spawnProcess:(NSString *)path args:(NSArray *)args
@@ -67,22 +72,12 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
     NSMutableString *stdoutString;
     NSMutableString *stderrString;
 
-    int stdoutPipe[2];
-    int stderrPipe[2];
     int status;
     char **argv;
 
     pid_t taskPid;
 
-    __block volatile BOOL isRunning;
-    __block volatile BOOL stdoutRunning;
-    __block volatile BOOL stderrRunning;
-
-    dispatch_semaphore_t semaphore;
-    dispatch_queue_t logger;
-
     posix_spawnattr_t attr;
-    posix_spawn_file_actions_t action;
 
     argsMutable = args.mutableCopy ? : [NSMutableArray new];
     [argsMutable insertObject:path atIndex:0];
@@ -101,18 +96,9 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
     posix_spawnattr_set_persona_np(&attr, 99, POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE);
     posix_spawnattr_set_persona_uid_np(&attr, 0);
     posix_spawnattr_set_persona_gid_np(&attr, 0);
+    posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETPGROUP);
 
-    posix_spawn_file_actions_init(&action);
-
-    pipe(stderrPipe);
-    posix_spawn_file_actions_adddup2(&action, stderrPipe[1], STDERR_FILENO);
-    posix_spawn_file_actions_addclose(&action, stderrPipe[0]);
-
-    pipe(stdoutPipe);
-    posix_spawn_file_actions_adddup2(&action, stdoutPipe[1], STDOUT_FILENO);
-    posix_spawn_file_actions_addclose(&action, stdoutPipe[0]);
-
-    status = posix_spawn(&taskPid, [path UTF8String], &action, &attr, (char* const*)argv, NULL);
+    status = posix_spawn(&taskPid, [path UTF8String], NULL, &attr, (char* const*)argv, NULL);
     posix_spawnattr_destroy(&attr);
 
     for (iter = 0; iter < argsCount; iter++)

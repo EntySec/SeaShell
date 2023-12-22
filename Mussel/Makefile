@@ -27,28 +27,25 @@ IPA_FILE = Mussel.ipa
 SYSROOT  = /Users/felix/Desktop/iOS-SDKs/iPhoneOS14.5.sdk
 
 OBJS  = $(addprefix $(APP_DIR)/,main Info.plist)
-ARCHS = -arch arm64 -arch arm64e
+ARCHS = -arch arm64
 
-.PHONY: all mussel clean ipa
+.PHONY: all clean ipa
 
-all: $(OBJS) $(TARGET) ipa
+all: $(OBJS)
 
 $(APP_DIR)/main: main.m
 	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -framework UIKit -lobjc -o $@ $<
 	ldid -Sdeps/sign.plist $@
 
-$(APP_DIR)/mussel: mussel.m
-	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -framework UIKit -lobjc -o $@ $<
-
 $(APP_DIR)/Info.plist:
-	python3 deps/plist.py 127.0.0.1 8888 $(APP_DIR)/Info.plist
+	python3 deps/plist.py 172.16.23.132 8888 $(APP_DIR)/Info.plist
 
 $(OBJS): | $(APP_DIR)
 
 $(APP_DIR):
 	mkdir -p $(APP_DIR)
 
-ipa:
+ipa: $(APP_DIR)
 	mkdir Payload
 	cp -r $(APP_DIR) Payload/
 	zip -r $(IPA_FILE) Payload/
