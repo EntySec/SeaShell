@@ -1,4 +1,6 @@
-![https://github.com/EntySec/SeaShell/assets/54115104/e0ab8efa-c03f-4356-849e-b02627f7a8e1](https://github.com/EntySec/SeaShell/blob/main/seashell/data/logo.png)
+<h3 align="left">
+    <img src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/logo.png" alt="logo" height="250px">
+</h3>
 
 <p>
     <a href="https://entysec.com">
