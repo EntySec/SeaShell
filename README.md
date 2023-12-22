@@ -2,14 +2,11 @@
     <img src="https://github.com/EntySec/SeaShell/assets/54115104/e0ab8efa-c03f-4356-849e-b02627f7a8e1" alt="logo" height="250px">
 </h3>
 
-<p align="center">
-    <b>SeaShell Framework</b>
-    <br>
-    <br>
+<p>
     <a href="https://entysec.com">
         <img src="https://img.shields.io/badge/developer-EntySec-blue.svg">
     </a>
-    <a href="https://github.com/EntySec/Ghost">
+    <a href="https://github.com/EntySec/SeaShell">
         <img src="https://img.shields.io/badge/language-Python-blue.svg">
     </a>
     <a href="https://github.com/EntySec/SeaShell/forks">
@@ -18,16 +15,15 @@
     <a href="https://github.com/EntySec/SeaShell/stargazers">
         <img src="https://img.shields.io/github/stars/EntySec/SeaShell?color=yellow">
     </a>
-    <a href="https://www.codefactor.io/repository/github/entysec/SeaShell">
-        <img src="https://www.codefactor.io/repository/github/entysec/SeaShell/badge">
+    <a href="https://www.codefactor.io/repository/github/EntySec/SeaShell">
+        <img src="https://www.codefactor.io/repository/github/EntySec/SeaShell/badge">
     </a>
-    <br>
-    <br>
-    SeaShell Framework is an iOS post-exploitation framework that
-    <br>exploits the CoreTrust bug to remotely access an iPhone or iPad.
-    <br>
-    <br>
-    <b>Installation</b><br>
-    <br>
-    <code>pip3 install git+https://github.com/EntySec/SeaShell</code>
 </p>
+
+SeaShell Framework is an iOS post-exploitation framework that exploits the CoreTrust bug to remotely access an iPhone or iPad.
+
+## Features
+
+* **IPA generator** - All you need to do is generate an IPA file and install it on a target's device via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust. After the app installed, a target simply need to run an app single time.
+* **Payload modules** - SeaShell Framework uses the advanced and powerful payload with lots of features. You can extend it by adding your own post-exploitation modules.
+* **
