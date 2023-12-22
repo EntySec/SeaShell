@@ -25,5 +25,12 @@ SeaShell Framework is an iOS post-exploitation framework that exploits the CoreT
 ## Features
 
 * **IPA generator** - All you need to do is generate an IPA file and install it on a target's device via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust. After the app installed, a target simply need to run an app single time.
-* **Payload modules** - SeaShell Framework uses the advanced and powerful payload with lots of features. You can extend it by adding your own post-exploitation modules.
-* **
+* **Modules & Plugins** - SeaShell Framework uses the advanced and powerful payload with lots of features. You can extend it by adding your own post-exploitation modules or plugins.
+* **Basic Set** - SeaShell Framework comes with basic set of post-exploitation modules that may exfiltrate following user data: DCIM, SMS, VoiceMail, Safari history and much more.
+
+## Covering them All
+
+*iOS 14, 15, 16, 17 are supported and can be exploited with SeaShell*
+
+## Endless Capabilities
+

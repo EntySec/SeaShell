@@ -51,12 +51,8 @@ class IPA(object):
 
         self.data_path = f'{os.path.dirname(os.path.dirname(__file__))}/data/'
 
-        self.badges = Badges()
-
         self.host = host
         self.port = port
-
-        self.icon = None
 
         self.hash = String().base64_string(
             f'{host}:{str(port)}', decode=True)
@@ -64,6 +60,7 @@ class IPA(object):
         self.app_name = 'Mussel'
         self.bundle_id = 'com.entysec.mussel'
         self.binary_name = 'main'
+        self.icon = self.data_path + 'AppIcon.png'
 
     def set_name(self, name: str, bundle_id: str) -> None:
         """ Set application name.
@@ -83,7 +80,26 @@ class IPA(object):
         :return None: None
         """
 
-        image = Image.open(icon)
+        self.icon = icon
+
+    def generate(self, path: str) -> None:
+        """ Generate IPA.
+
+        :param str path: path to save ipa
+        :return None: None
+        """
+
+        self.craft_icons()
+        self.craft_plist()
+        self.build_ipa(path)
+
+    def craft_icons(self) -> None:
+        """ Craft icons.
+
+        :return None: None
+        """
+
+        image = Image.open(self.icon)
         app = self.data_path + 'Mussel.app/'
 
         image.resize((29, 29), Image.ANTIALIAS).save(
@@ -129,16 +145,6 @@ class IPA(object):
         image.resize((76 * 2, 76 * 2), Image.ANTIALIAS).save(
             app + 'AppIcon76x76@2x.png', 'PNG', quality=100)
 
-    def generate(self, path: str) -> None:
-        """ Generate IPA.
-
-        :param str path: path to save ipa
-        :return None: None
-        """
-
-        self.craft_plist()
-        self.build_ipa(path)
-
     def build_ipa(self, path: str) -> None:
         """ Build IPA.
 
@@ -153,7 +159,7 @@ class IPA(object):
         archive = path + '/' + self.app_name + '.ipa'
 
         os.mkdir(payload)
-        shutil.copytree(self.data_path + 'Mussel.app', payload + 'Mussel.app')
+        shutil.copytree(self.data_path + 'Mussel.app', payload + self.app_name + '.app')
         shutil.make_archive(archive, 'zip', payload)
         shutil.move(archive + '.zip', archive)
         shutil.rmtree(payload)

@@ -52,8 +52,10 @@ class Device(object):
 
         super().__init__()
 
-        self.badges = Badges()
+        self.modules_path = f'{os.path.dirname(os.path.dirname(__file__))}/modules/'
+        self.plugins_path = f'{os.path.dirname(os.path.dirname(__file__))}/plugins/'
 
+        self.badges = Badges()
         self.device = session
 
         self.host = self.device.details['Host']
@@ -75,6 +77,12 @@ class Device(object):
 
         :return None: None
         """
+
+        self.badges.print_process("Loading additional modules...")
+        self.device.load_modules(self.modules_path)
+
+        self.badges.print_process("Loading additional plugins...")
+        self.device.load_plugins(self.plugins_path)
 
         self.badges.print_success("Interactive connection spawned!")
 

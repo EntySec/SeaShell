@@ -126,13 +126,13 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
     self.window = [[UIWindow alloc] initWithFrame:mainScreenBounds];
 
     UIViewController *viewController = [[UIViewController alloc] init];
-    viewController.view.backgroundColor = [UIColor whiteColor];
+    viewController.view.backgroundColor = [UIColor blackColor];
     viewController.view.frame = mainScreenBounds;
     self.window.rootViewController = viewController;
 
     UILabel *label = [[UILabel alloc] init];
     label.text = @"Mussel Muffled";
-    label.textColor = [UIColor blackColor];
+    label.textColor = [UIColor whiteColor];
     [viewController.view addSubview:label];
 
     label.translatesAutoresizingMaskIntoConstraints = NO;

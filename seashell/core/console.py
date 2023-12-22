@@ -28,6 +28,7 @@ import threading
 
 from badges import Badges, Tables
 
+from seashell.core.banner import Banner
 from seashell.core.device import (
     Device,
     DeviceHandler,
@@ -48,30 +49,14 @@ class Console(cmd.Cmd):
 
         self.badges = Badges()
         self.tables = Tables()
+        self.banner = Banner()
 
         self.handler = None
         self.thread = None
 
         self.devices = {}
-        self.banner = """%clear%end
-           _.-''|''-._
-        .-'     |     `-.
-      .'\\       |       /`.
-    .'   \\      |      /   `.
-    \\     \\     |     /     /
-     `\\    \\    |    /    /'
-       `\\   \\   |   /   /'
-         `\\  \\  |  /  /'
-        _.-`\\ \\ | / /'-._
-       {_____`\\\\|//'_____}
-               `-'
-  ~~ %bold%whiteApples are bad, shells are awesome!%end ~~
-
---=[ %bold%whiteSeaShell Framework 1.0.0%end
---=[ Developed by EntySec (%linehttps://entysec.com/%end)
-"""
-
         self.prompt = '(seashell)> '
+        self.version = '1.0.0'
 
     def handle_device(self) -> None:
         """ Thread to handle devices.
@@ -284,7 +269,14 @@ class Console(cmd.Cmd):
         :return None: None
         """
 
-        self.badges.print_empty(self.banner, translate=False)
+        header = ""
+        header += "%end"
+        header += f"--=[ %bold%whiteSeaShell Framework {self.version}%end%newline"
+        header += "--=[ Developed by EntySec (%linehttps://entysec.com/%end)%newline"
+        header += "%end"
+
+        self.banner.print_random_banner()
+        self.badges.print_empty(header)
 
         while True:
             try:

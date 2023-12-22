@@ -1,1 +1,2 @@
 recursive-include seashell/data *
+recursive-include seashell/modules *
