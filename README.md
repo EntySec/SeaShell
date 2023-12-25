@@ -24,13 +24,18 @@ SeaShell Framework is an iOS post-exploitation framework that exploits the CoreT
 
 ## Features
 
-* **IPA generator** - All you need to do is generate an IPA file and install it on a target's device via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust. After the app installed, a target simply need to run an app single time.
-* **Modules & Plugins** - SeaShell Framework uses the advanced and powerful payload with lots of features. You can extend it by adding your own post-exploitation modules or plugins.
+* **IPA generator** - All you need to do is generate an IPA file and install it on a target's device via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust. After app was installed, a target simply need to run an app single time.
+* **Powerful Implant** - SeaShell Framework uses the advanced and powerful payload with lots of features. It is called [Pwny](https://github.com/EntySec/Pwny). You can extend it by adding your own post-exploitation modules or plugins.
 * **Basic Set** - SeaShell Framework comes with basic set of post-exploitation modules that may exfiltrate following user data: DCIM, SMS, VoiceMail, Safari history and much more.
 
 ## Covering them All
 
-*iOS 14, 15, 16, 17 are supported and can be exploited with SeaShell*
+Wide range of iOS versions are supported, since all of the are vulnerable to CoreTrust bug. They can be iOS 14, 15, 16 or early 17. Since
 
 ## Endless Capabilities
 
+[Pwny](https://github.com/EntySec/Pwny) is a powerful implant with a plenty of features including evasion, dynamic extensions and much more. It is embedded into the second phase of SeaShell Framework attack. These are all phases:
+
+* **1.** IPA file installed and opened.
+* **2.** Pwny is loaded through `posix_spawn()`.
+* **3.** Connection established and Pwny is ready to receive commands.
