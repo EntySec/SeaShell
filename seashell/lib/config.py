@@ -23,54 +23,34 @@ SOFTWARE.
 """
 
 import os
-import random
-
-from colorscript import ColorScript
-
-from badges import Badges
-
-from seashell.lib.config import Config
+import pathlib
 
 
-class Banner(object):
+class Config(object):
     """ Subclass of seashell.core module.
 
-    This subclass of seashell.core module is intended for
-    providing tools for printing banners in UI.
+    This subclass of seashell.core module is intended for providing
+    basic configuration for SeaShell.
     """
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.config = Config()
+        self.user_path = f'{pathlib.Path.home()}/.seashell/'
+        self.base_path = f'{os.path.dirname(os.path.dirname(__file__))}/'
+        self.data_path = self.base_path + 'data/'
 
-        self.badges = Badges()
-        self.color_script = ColorScript()
+        self.banners_path = self.data_path + 'banners/'
+        self.modules_path = self.base_path + 'modules/'
+        self.plugins_path = self.base_path + 'plugins/'
 
-    def print_random_banner(self) -> None:
-        """ Print random banner.
+        self.loot_path = self.user_path + 'loot/'
+
+    def setup(self) -> None:
+        """ Setup config and create paths.
 
         :return None: None
         """
 
-        if os.path.exists(self.config.banners_path):
-            banners = []
-            all_banners = os.listdir(self.config.banners_path)
-
-            for banner in all_banners:
-                banners.append(banner)
-
-            if banners:
-                banner = ""
-
-                while not banner:
-                    random_banner = random.randint(0, len(banners) - 1)
-                    banner = self.color_script.parse_file(
-                        self.config.banners_path + banners[random_banner]
-                    )
-
-                self.badges.print_empty(f"%newline%end{banner}%end%newline")
-            else:
-                self.badges.print_warning("No banners detected.")
-        else:
-            self.badges.print_warning("No banners detected.")
+        os.mkdir(self.user_path)
+        os.mkdir(self.loot_path)

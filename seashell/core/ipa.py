@@ -31,6 +31,8 @@ from PIL import Image
 from pex.string import String
 from typing import Optional
 
+from seashell.lib.config import Config
+
 
 class IPA(object):
     """ Subclass of seashell.core module.
@@ -49,7 +51,7 @@ class IPA(object):
 
         super().__init__()
 
-        self.data_path = f'{os.path.dirname(os.path.dirname(__file__))}/data/'
+        self.config = Config()
 
         self.host = host
         self.port = port
@@ -60,7 +62,7 @@ class IPA(object):
         self.app_name = 'Mussel'
         self.bundle_id = 'com.entysec.mussel'
         self.binary_name = 'main'
-        self.icon = self.data_path + 'AppIcon.png'
+        self.icon = self.config.data_path + 'AppIcon.png'
 
     def set_name(self, name: str, bundle_id: str) -> None:
         """ Set application name.
@@ -100,7 +102,7 @@ class IPA(object):
         """
 
         image = Image.open(self.icon)
-        app = self.data_path + 'Mussel.app/'
+        app = self.config.data_path + 'Mussel.app/'
 
         image.resize((29, 29), Image.ANTIALIAS).save(
             app + 'AppIcon29x29.png', 'PNG', quality=100)
@@ -155,14 +157,17 @@ class IPA(object):
         if not os.path.isdir(path):
             path = os.path.split(path)[0]
 
-        payload = path + '/Payload/'
+        app = path + self.app_name + '/'
+        payload = app + 'Payload/'
         archive = path + '/' + self.app_name + '.ipa'
 
+        os.mkdir(app)
         os.mkdir(payload)
-        shutil.copytree(self.data_path + 'Mussel.app', payload + self.app_name + '.app')
-        shutil.make_archive(archive, 'zip', payload)
+
+        shutil.copytree(self.config.data_path + 'Mussel.app', payload + self.app_name + '.app')
+        shutil.make_archive(archive, 'zip', app)
         shutil.move(archive + '.zip', archive)
-        shutil.rmtree(payload)
+        shutil.rmtree(app)
 
     def craft_plist(self) -> None:
         """ Craft plist file.
@@ -171,7 +176,7 @@ class IPA(object):
         """
 
         plist_path = (
-                self.data_path +
+                self.config.data_path +
                 'Mussel.app/Info.plist'
         )
 

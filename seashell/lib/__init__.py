@@ -21,32 +21,3 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-
-from setuptools import setup, find_packages
-
-setup(name='seashell',
-      version='1.0.0',
-      description=(
-          'SeaShell Framework is an iOS post-exploitation framework that exploits the'
-          ' CoreTrust bug to remotely access an iPhone or iPad.'
-      ),
-      url='http://github.com/EntySec/SeaShell',
-      author='EntySec',
-      author_email='entysec@gmail.com',
-      license='MIT',
-      python_requires='>=3.7.0',
-      packages=find_packages(),
-      include_package_data=True,
-      entry_points={
-          "console_scripts": [
-              "seashell = seashell:cli"
-          ]
-      },
-      install_requires=[
-          'pex @ git+https://github.com/EntySec/Pex',
-          'badges @ git+https://github.com/EntySec/Badges',
-          'colorscript @ git+https://github.com/EntySec/ColorScript',
-          'hatsploit @ git+https://github.com/EntySec/HatSploit'
-      ],
-      zip_safe=False
-      )

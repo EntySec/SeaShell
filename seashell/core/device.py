@@ -35,6 +35,8 @@ from pwny.session import PwnySession
 from badges import Badges
 from colorscript import ColorScript
 
+from seashell.lib.config import Config
+
 
 class Device(object):
     """ Subclass of seashell.core module.
@@ -52,8 +54,7 @@ class Device(object):
 
         super().__init__()
 
-        self.modules_path = f'{os.path.dirname(os.path.dirname(__file__))}/modules/'
-        self.plugins_path = f'{os.path.dirname(os.path.dirname(__file__))}/plugins/'
+        self.config = Config()
 
         self.badges = Badges()
         self.device = session
@@ -79,10 +80,10 @@ class Device(object):
         """
 
         self.badges.print_process("Loading additional modules...")
-        self.device.load_modules(self.modules_path)
+        self.device.load_commands(self.config.modules_path)
 
         self.badges.print_process("Loading additional plugins...")
-        self.device.load_plugins(self.plugins_path)
+        self.device.load_plugins(self.config.plugins_path)
 
         self.badges.print_success("Interactive connection spawned!")
 

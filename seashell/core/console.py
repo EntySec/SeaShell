@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import os
 import cmd
 import sys
 import threading
@@ -34,6 +35,8 @@ from seashell.core.device import (
     DeviceHandler,
 )
 from seashell.core.ipa import IPA
+
+from seashell.lib.config import Config
 
 
 class Console(cmd.Cmd):
@@ -50,6 +53,9 @@ class Console(cmd.Cmd):
         self.badges = Badges()
         self.tables = Tables()
         self.banner = Banner()
+        self.config = Config()
+
+        self.config.setup()
 
         self.handler = None
         self.thread = None
@@ -269,10 +275,24 @@ class Console(cmd.Cmd):
         :return None: None
         """
 
+        modules = 0
+        plugins = 0
+
+        if os.path.exists(self.config.modules_path):
+            for module in os.listdir(self.config.modules_path):
+                if module.endswith('.py'):
+                    modules += 1
+
+        if os.path.exists(self.config.plugins_path):
+            for plugin in os.listdir(self.config.plugins_path):
+                if plugin.endswith('.py'):
+                    plugins += 1
+
         header = ""
         header += "%end"
-        header += f"--=[ %bold%whiteSeaShell Framework {self.version}%end%newline"
-        header += "--=[ Developed by EntySec (%linehttps://entysec.com/%end)%newline"
+        header += f"   --=[ %bold%whiteSeaShell Framework {self.version}%end%newline"
+        header += f"--==--[ %green{str(modules)}%end modules | %green{str(plugins)}%end plugins%newline"
+        header += "   --=[ Developed by EntySec (%linehttps://entysec.com/%end)%newline"
         header += "%end"
 
         self.banner.print_random_banner()
