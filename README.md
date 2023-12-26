@@ -38,9 +38,9 @@ Simply generate custom IPA file and install it on target's iPhone or iPad.
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/1.svg">
 </p>
 
-### Staring listener
+### Starting listener
 
-Then you will need to start a listener on a host and port you added to your IPA. Once installed application opens, you will receive a session.
+Then you will need to start a listener on a host and port you added to your IPA. Once installed application will open, you receive a session.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/2.svg">
@@ -48,7 +48,7 @@ Then you will need to start a listener on a host and port you added to your IPA.
 
 ### Accessing device
 
-After you received a connection you will be able to communicate with session through a shell. Use `interact` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
+After you have received a connection you will be able to communicate with session through a shell. Use `interact` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/3.svg">
@@ -60,7 +60,7 @@ Wide range of iOS versions are supported, since all of the are vulnerable to Cor
 
 ## Endless Capabilities
 
-[Pwny](https://github.com/EntySec/Pwny) is a powerful implant with a plenty of features including evasion, dynamic extensions and much more. It is embedded into the second phase of SeaShell Framework attack. These are all phases:
+[Pwny](https://github.com/EntySec/Pwny) is a powerful implant with plenty of features including evasion, dynamic extensions and much more. It is embedded into the second phase of SeaShell Framework attack. These are all phases:
 
 * **1.** IPA file installed and opened.
 * **2.** Pwny is loaded through `posix_spawn()`.
