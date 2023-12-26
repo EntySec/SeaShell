@@ -34,19 +34,25 @@ SeaShell Framework is an iOS post-exploitation framework that exploits the CoreT
 
 Simply generate custom IPA file and install it on target's iPhone or iPad.
 
-![1]()
+<p align="right">
+  <img width="50%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/1.svg">
+</p>
 
 ### Staring listener
 
 Then you will need to start a listener on a host and port you added to your IPA. Once installed application opens, you will receive a session.
 
-![2]()
+<p align="right">
+  <img width="50%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/2.svg">
+</p>
 
 ### Accessing device
 
 After you received a connection you will be able to communicate with session through a shell. Use `interact` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
 
-![3]()
+<p align="right">
+  <img width="50%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/3.svg">
+</p>
 
 ## Covering them All
 
