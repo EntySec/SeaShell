@@ -54,5 +54,8 @@ class Config(object):
         :return None: None
         """
 
-        os.mkdir(self.user_path)
-        os.mkdir(self.loot_path)
+        if not os.path.exists(self.user_path):
+            os.mkdir(self.user_path)
+
+        if not os.path.exists(self.loot_path):
+            os.mkdir(self.loot_path)

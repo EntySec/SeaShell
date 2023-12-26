@@ -154,10 +154,12 @@ class IPA(object):
         :return None: None
         """
 
+        path = os.path.abspath(path)
+
         if not os.path.isdir(path):
             path = os.path.split(path)[0]
 
-        app = path + self.app_name + '/'
+        app = path + '/' + self.app_name + '/'
         payload = app + 'Payload/'
         archive = path + '/' + self.app_name + '.ipa'
 

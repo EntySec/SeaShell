@@ -42,7 +42,8 @@ class HatSploitCommand(Command):
         self.print_process("Parsing history database...")
 
         try:
-            history = self.db.parse_safari_history(path)
+            history = self.db.parse_safari_history(
+                Loot().specific_loot('History.db'))
         except Exception:
             self.print_error("Failed to parse history database!")
             return

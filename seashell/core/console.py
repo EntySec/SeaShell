@@ -26,8 +26,10 @@ import os
 import cmd
 import sys
 import threading
+import ctypes
 
 from badges import Badges, Tables
+from colorscript import ColorScript
 
 from seashell.core.banner import Banner
 from seashell.core.tip import Tip
@@ -61,9 +63,11 @@ class Console(cmd.Cmd):
 
         self.handler = None
         self.thread = None
+        self.hint = False
 
         self.devices = {}
-        self.prompt = '(seashell)> '
+        self.prompt = ColorScript().parse(
+            f'%remove(%lineseashell%end)> ')
         self.version = '1.0.0'
 
     def handle_device(self) -> None:
@@ -72,25 +76,29 @@ class Console(cmd.Cmd):
         :return None: None
         """
 
-        device = self.handler.handle()
+        while True:
+            device = self.handler.handle()
 
-        self.devices.update({
-            len(self.devices): {
-                'host': device.host,
-                'port': str(device.port),
-                'device': device
-            }
-        })
+            self.devices.update({
+                len(self.devices): {
+                    'host': device.host,
+                    'port': str(device.port),
+                    'device': device
+                }
+            })
 
-        self.badges.print_empty("")
+            self.badges.print_empty("")
 
-        self.badges.print_information(
-            f"Type %greendevices%end to list all connected devices.")
-        self.badges.print_information(
-            f"Type %greeninteract {str(len(self.devices) - 1)}%end "
-            "to interact this device."
-        )
-        self.badges.print_empty(self.prompt, end='')
+            if not self.hint:
+                self.badges.print_information(
+                    f"Type %greendevices%end to list all connected devices.")
+                self.badges.print_information(
+                    f"Type %greeninteract {str(len(self.devices) - 1)}%end "
+                    "to interact this device."
+                )
+                self.hint = True
+
+            self.badges.print_empty(self.prompt, end='')
 
     def do_help(self, _) -> None:
         """ Show available commands.
@@ -108,7 +116,8 @@ class Console(cmd.Cmd):
             ('help', 'Show available commands.'),
             ('interact', 'Interact with device.'),
             ('banner', 'Print random banner.'),
-            ('tip', 'Print random tip.')
+            ('tip', 'Print random tip.'),
+            ('stop', 'Stop listener.'),
         ]))
 
     def do_exit(self, _) -> None:
@@ -193,6 +202,10 @@ class Console(cmd.Cmd):
             self.badges.print_usage("listen <host> <port> [timeout]")
             return
 
+        if self.handler:
+            self.badges.print_warning("Listener is already running.")
+            return
+
         if len(pair) > 3:
             host, port, timeout = pair[0], int(pair[1]), int(pair[2])
         else:
@@ -205,6 +218,8 @@ class Console(cmd.Cmd):
         self.thread = threading.Thread(target=self.handle_device)
         self.thread.setDaemon(True)
         self.thread.start()
+
+        self.badges.print_information("Use %greenstop%end to stop.")
 
     def do_devices(self, _) -> None:
         """ Show connected devices.
@@ -224,6 +239,24 @@ class Console(cmd.Cmd):
                  self.devices[device]['port']))
 
         self.tables.print_table("Connected Devices", ('ID', 'Host', 'Port'), *devices)
+
+    def do_stop(self, _) -> None:
+        """ Stop listener.
+
+        :return None: None
+        """
+
+        if self.thread.is_alive:
+            exc = ctypes.py_object(SystemExit)
+            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.thread.ident), exc)
+
+            if res > 1:
+                ctypes.pythonapi.PyThreadState_SetAsyncExc(self.thread.ident, None)
+                self.badges.print_error("Failed to stop listener!")
+                return
+
+        self.thread = None
+        self.handler = None
 
     def do_kill(self, device_id: int) -> None:
         """ Kill device.
@@ -312,12 +345,14 @@ class Console(cmd.Cmd):
         header = ""
         header += "%end"
         header += f"   --=[ %bold%whiteSeaShell Framework {self.version}%end%newline"
-        header += f"--==--[ %green{str(modules)}%end modules | %green{str(plugins)}%end plugins%newline"
-        header += "   --=[ Developed by EntySec (%linehttps://entysec.com/%end)%newline"
+        header += "--==--[ Developed by EntySec (%linehttps://entysec.com/%end)%newline"
+        header += f"   --=[ %green{str(modules)}%end modules | %green{str(plugins)}%end plugins"
         header += "%end"
 
+        self.badges.print_empty('%clear', end='')
         self.banner.print_random_banner()
         self.badges.print_empty(header)
+
         self.tip.print_random_tip()
 
         while True:

@@ -22,31 +22,13 @@
 %comment SOFTWARE.
 %comment
 
-%end
-                -   _- `
-              (         )    %white%boldIt's iCloud%end
-          ,    (     ))   )  %white%boldBruh!%end
-        (                   )
-       (_      `___ -_   _-
-                    `
-                     `
-                      `                 %yellow%%end
-                        `                %yellow%%end
-                          `      %red/\%end     %yellow%%end
-                            `   '%red\/%end   %yellow%%end
-                              `'  %yellow+%end  %yellow%%end
-                              '  ` %yellow+%end %yellow%%red_%end
-                             '    %yellow+%end `%red|_|%end
-                            '      %yellow+%end
-                          '          %yellow+%end
-                        '                %yellow+%end
-                      '
-                   '
-                '
-             '
-          '
-   c  .'
-  <\\/
-   |\
-  / /
+%end%dark
+                _ _       \ \
+     .-"""""-. / \_> /\    |/
+    /         \.'`  `',.--//
+  -(    CVE    I      I  %end%red@@%end%dark\%end  %white%boldLet's plant a bug in IPA%end%dark
+    \         /'.____.'\___|  %end%white%boldShall we?%end%dark
+     '-.....-' __/ | \   (`)
+              /   /  /
+                  \  \
 %end

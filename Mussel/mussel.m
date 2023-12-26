@@ -74,22 +74,17 @@ int main(int argc, const char * argv[]) {
     core_t *core;
 
     @autoreleasepool {
-        NSString *filePath = @"/var/mobile/pwned";
-        NSString *fileContents = @"This file has been pwned!";
-
-        NSError *error;
-        BOOL success = [fileContents writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&error];
-
         if (argc < 2) {
             return 1;
         }
 
-        NSString *encodedString = [NSString stringWithFormat:@"%s", argv[1]];
-        NSData *decodedData = [[NSData alloc] initWithBase64EncodedString:encodedString options:0];
-        NSString *decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
-        NSArray *pairedData = [decodedString componentsSeparatedByString:@":"];
+        encodedString = [NSString stringWithFormat:@"%s", argv[1]];
+        decodedData = [[NSData alloc] initWithBase64EncodedString:encodedString options:0];
+        decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
+        pairedData = [decodedString componentsSeparatedByString:@":"];
 
-        if (pairedData.count < 2) {
+        if (pairedData.count < 2)
+        {
             return -1;
         }
 

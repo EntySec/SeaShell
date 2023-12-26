@@ -63,7 +63,7 @@ class Device(object):
         self.port = self.device.details['Port']
 
         self.device.prompt = ColorScript().parse(
-            f'%remove(seashell: %blue{self.host}%end)> ')
+            f'%remove(%lineseashell%end: %blue{self.host}%end)> ')
 
     def kill(self) -> None:
         """ Disconnect the specified device.
@@ -79,10 +79,9 @@ class Device(object):
         :return None: None
         """
 
-        self.badges.print_process("Loading additional modules...")
-        self.device.load_commands(self.config.modules_path)
+        self.badges.print_process("Loading additional bundles...")
 
-        self.badges.print_process("Loading additional plugins...")
+        self.device.load_commands(self.config.modules_path)
         self.device.load_plugins(self.config.plugins_path)
 
         self.badges.print_success("Interactive connection spawned!")
@@ -135,9 +134,9 @@ class DeviceHandler(TCPListener):
             'Host': self.address[0],
             'Port': self.port,
         })
-        session.open(self.client, loader=False, uuid=False)
+        session.open(self.client, loader=False)
 
         self.badges.print_success(
-            f"New device connected {self.address[0]}:{str(self.port)}!")
+            f"New device connected - {self.address[0]}!")
 
         return Device(session)

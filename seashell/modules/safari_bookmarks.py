@@ -42,7 +42,8 @@ class HatSploitCommand(Command):
         self.print_process("Parsing bookmarks database...")
 
         try:
-            bookmarks = self.db.parse_safari_bookmarks(path)
+            bookmarks = self.db.parse_safari_bookmarks(
+                Loot().specific_loot('Bookmarks.db'))
         except Exception:
             self.print_error("Failed to parse bookmarks database!")
             return

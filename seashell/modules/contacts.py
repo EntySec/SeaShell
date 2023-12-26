@@ -42,7 +42,8 @@ class HatSploitCommand(Command):
         self.print_process("Parsing contacts database...")
 
         try:
-            contacts = self.db.parse_addressbook(path)
+            contacts = self.db.parse_addressbook(
+                Loot().specific_loot('AddressBook.sqlitedb'))
         except Exception:
             self.print_error("Failed to parse contacts database!")
             return

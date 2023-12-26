@@ -44,7 +44,8 @@ class HatSploitCommand(Command):
             self.print_process("Parsing SMS chats...")
 
             try:
-                chats = self.db.parse_sms_chats(path)
+                chats = self.db.parse_sms_chats(
+                    Loot().specific_loot('sms.db'))
             except Exception:
                 self.print_error(f"Failed to parse SMS chats!")
                 return
@@ -66,7 +67,8 @@ class HatSploitCommand(Command):
         self.print_process(f"Parsing SMS for {argv[1]}...")
 
         try:
-            sms = self.db.parse_sms_chat(path, argv[1], imessage=False)
+            sms = self.db.parse_sms_chat(
+                Loot().specific_loot('sms.db'), argv[1], imessage=False)
         except Exception:
             self.print_error(f"Failed to parse SMS for {argv[1]}!")
             return

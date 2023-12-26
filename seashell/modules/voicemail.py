@@ -43,7 +43,8 @@ class HatSploitCommand(Command):
         self.print_process("Parsing voicemail database...")
 
         try:
-            voicemail = self.db.parse_voicemail(path)
+            voicemail = self.db.parse_voicemail(
+                Loot().specific_loot('VoiceMail.db'))
         except Exception:
             self.print_error("Failed to parse voicemail database!")
             return

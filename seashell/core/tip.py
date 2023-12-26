@@ -69,7 +69,7 @@ class Tip(object):
                         self.config.tips_path + tips[random_tip]
                     )
 
-                self.badges.print_empty(f"%newline%SeaShell Tip: {tip}%end%newline")
+                self.badges.print_empty(f"%newline%endSeaShell Tip: {tip}%end%newline")
             else:
                 self.badges.print_warning("No tips detected.")
         else:
