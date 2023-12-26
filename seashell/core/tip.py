@@ -23,36 +23,54 @@ SOFTWARE.
 """
 
 import os
-import pathlib
+import random
+
+from colorscript import ColorScript
+
+from badges import Badges
+
+from seashell.lib.config import Config
 
 
-class Config(object):
+class Tip(object):
     """ Subclass of seashell.core module.
 
-    This subclass of seashell.core module is intended for providing
-    basic configuration for SeaShell.
+    This subclass of seashell.core module is intended for
+    providing tools for printing tips in UI.
     """
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.user_path = f'{pathlib.Path.home()}/.seashell/'
-        self.base_path = f'{os.path.dirname(os.path.dirname(__file__))}/'
-        self.data_path = self.base_path + 'data/'
+        self.config = Config()
 
-        self.banners_path = self.data_path + 'banners/'
-        self.tips_path = self.data_path + 'tips/'
+        self.badges = Badges()
+        self.color_script = ColorScript()
 
-        self.modules_path = self.base_path + 'modules/'
-        self.plugins_path = self.base_path + 'plugins/'
-
-        self.loot_path = self.user_path + 'loot/'
-
-    def setup(self) -> None:
-        """ Setup config and create paths.
+    def print_random_tip(self) -> None:
+        """ Print random tip.
 
         :return None: None
         """
 
-        os.mkdir(self.user_path)
-        os.mkdir(self.loot_path)
+        if os.path.exists(self.config.tips_path):
+            tips = []
+            all_tips = os.listdir(self.config.tips_path)
+
+            for tip in all_tips:
+                tips.append(tip)
+
+            if tips:
+                tip = ""
+
+                while not tip:
+                    random_tip = random.randint(0, len(tips) - 1)
+                    tip = self.color_script.parse_file(
+                        self.config.tips_path + tips[random_tip]
+                    )
+
+                self.badges.print_empty(f"%newline%SeaShell Tip: {tip}%end%newline")
+            else:
+                self.badges.print_warning("No tips detected.")
+        else:
+            self.badges.print_warning("No tips detected.")

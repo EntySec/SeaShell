@@ -30,6 +30,7 @@ import threading
 from badges import Badges, Tables
 
 from seashell.core.banner import Banner
+from seashell.core.tip import Tip
 from seashell.core.device import (
     Device,
     DeviceHandler,
@@ -53,6 +54,7 @@ class Console(cmd.Cmd):
         self.badges = Badges()
         self.tables = Tables()
         self.banner = Banner()
+        self.tip = Tip()
         self.config = Config()
 
         self.config.setup()
@@ -99,12 +101,14 @@ class Console(cmd.Cmd):
         self.tables.print_table("Core Commands", ('Command', 'Description'), *sorted([
             ('clear', 'Clear terminal window.'),
             ('devices', 'Show connected devices.'),
-            ('kill', 'Kill device.'),
+            ('kill', 'Kill device by ID.'),
             ('listen', 'Start listener in background.'),
             ('ipa', 'Generate IPA.'),
             ('exit', 'Exit SeaShell Framework.'),
             ('help', 'Show available commands.'),
-            ('interact', 'Interact with device.')
+            ('interact', 'Interact with device.'),
+            ('banner', 'Print random banner.'),
+            ('tip', 'Print random tip.')
         ]))
 
     def do_exit(self, _) -> None:
@@ -127,6 +131,22 @@ class Console(cmd.Cmd):
         """
 
         self.badges.print_empty('%clear', end='')
+
+    def do_tip(self, _) -> None:
+        """ Print random tip.
+
+        :return None: None
+        """
+
+        self.tip.print_random_tip()
+
+    def do_banner(self, _) -> None:
+        """ Print random banner.
+
+        :return None: None
+        """
+
+        self.banner.print_random_banner()
 
     def do_ipa(self, _) -> None:
         """ Generate IPA.
@@ -158,6 +178,7 @@ class Console(cmd.Cmd):
             ipa.set_icon(icon_path)
 
         ipa.generate(path)
+        self.badges.print_success(f"IPA saved to {path}!")
 
     def do_listen(self, pair: str) -> None:
         """ Start TCP listener.
@@ -297,6 +318,7 @@ class Console(cmd.Cmd):
 
         self.banner.print_random_banner()
         self.badges.print_empty(header)
+        self.tip.print_random_tip()
 
         while True:
             try:

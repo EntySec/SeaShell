@@ -25,14 +25,14 @@
 %end%white
            _.-''|''-._
         .-'     |     `-.
-      .'\\       |       /`.
-    .'   \\      |      /   `.
-    \\     \\     |     /     /
-     `\\    \\    |    /    /'
-       `\\   \\   |   /   /'
-         `\\  \\  |  /  /'
-        %dark_.-%end`\\ \\ | / /'%dark-._%end
-       %dark{_____%end`\\\\|//'%dark_____}%end
+      .'\       |       /`.
+    .'   \      |      /   `.
+    \     \     |     /     /
+     `\    \    |    /    /'
+       `\   \   |   /   /'
+         `\  \  |  /  /'
+        %dark_.-%end`\  \  |  /'%dark-._%end
+       %dark{_____%end`\ \ | /'%dark_____}%end
                %dark`-'%end
   ~~ %bold%whiteApples are bad, shells are awesome!%end ~~
 %end
