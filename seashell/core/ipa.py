@@ -104,47 +104,47 @@ class IPA(object):
         image = Image.open(self.icon)
         app = self.config.data_path + 'Mussel.app/'
 
-        image.resize((29, 29), Image.ANTIALIAS).save(
+        image.resize((29, 29), Image.LANCZOS).save(
             app + 'AppIcon29x29.png', 'PNG', quality=100)
-        image.resize((29 * 2, 29 * 2), Image.ANTIALIAS).save(
+        image.resize((29 * 2, 29 * 2), Image.LANCZOS).save(
             app + 'AppIcon29x29@2x.png', 'PNG', quality=100)
-        image.resize((29 * 3, 29 * 3), Image.ANTIALIAS).save(
+        image.resize((29 * 3, 29 * 3), Image.LANCZOS).save(
             app + 'AppIcon29x29@3x.png', 'PNG', quality=100)
 
-        image.resize((40, 40), Image.ANTIALIAS).save(
+        image.resize((40, 40), Image.LANCZOS).save(
             app + 'AppIcon40x40.png', 'PNG', quality=100)
-        image.resize((40 * 2, 40 * 2), Image.ANTIALIAS).save(
+        image.resize((40 * 2, 40 * 2), Image.LANCZOS).save(
             app + 'AppIcon40x40@2x.png', 'PNG', quality=100)
-        image.resize((40 * 3, 40 * 3), Image.ANTIALIAS).save(
+        image.resize((40 * 3, 40 * 3), Image.LANCZOS).save(
             app + 'AppIcon40x40@3x.png', 'PNG', quality=100)
 
-        image.resize((50, 50), Image.ANTIALIAS).save(
+        image.resize((50, 50), Image.LANCZOS).save(
             app + 'AppIcon50x50.png', 'PNG', quality=100)
-        image.resize((50 * 2, 50 * 2), Image.ANTIALIAS).save(
+        image.resize((50 * 2, 50 * 2), Image.LANCZOS).save(
             app + 'AppIcon50x50@2x.png', 'PNG', quality=100)
 
-        image.resize((57, 57), Image.ANTIALIAS).save(
+        image.resize((57, 57), Image.LANCZOS).save(
             app + 'AppIcon57x57.png', 'PNG', quality=100)
-        image.resize((57 * 2, 57 * 2), Image.ANTIALIAS).save(
+        image.resize((57 * 2, 57 * 2), Image.LANCZOS).save(
             app + 'AppIcon57x57@2x.png', 'PNG', quality=100)
-        image.resize((57 * 3, 57 * 3), Image.ANTIALIAS).save(
+        image.resize((57 * 3, 57 * 3), Image.LANCZOS).save(
             app + 'AppIcon57x57@3x.png', 'PNG', quality=100)
 
-        image.resize((60, 60), Image.ANTIALIAS).save(
+        image.resize((60, 60), Image.LANCZOS).save(
             app + 'AppIcon60x60.png', 'PNG', quality=100)
-        image.resize((60 * 2, 60 * 2), Image.ANTIALIAS).save(
+        image.resize((60 * 2, 60 * 2), Image.LANCZOS).save(
             app + 'AppIcon60x60@2x.png', 'PNG', quality=100)
-        image.resize((60 * 3, 60 * 3), Image.ANTIALIAS).save(
+        image.resize((60 * 3, 60 * 3), Image.LANCZOS).save(
             app + 'AppIcon60x60@3x.png', 'PNG', quality=100)
 
-        image.resize((72, 72), Image.ANTIALIAS).save(
+        image.resize((72, 72), Image.LANCZOS).save(
             app + 'AppIcon72x72.png', 'PNG', quality=100)
-        image.resize((72 * 2, 72 * 2), Image.ANTIALIAS).save(
+        image.resize((72 * 2, 72 * 2), Image.LANCZOS).save(
             app + 'AppIcon72x72@2x.png', 'PNG', quality=100)
 
-        image.resize((76, 76), Image.ANTIALIAS).save(
+        image.resize((76, 76), Image.LANCZOS).save(
             app + 'AppIcon76x76.png', 'PNG', quality=100)
-        image.resize((76 * 2, 76 * 2), Image.ANTIALIAS).save(
+        image.resize((76 * 2, 76 * 2), Image.LANCZOS).save(
             app + 'AppIcon76x76@2x.png', 'PNG', quality=100)
 
     def build_ipa(self, path: str) -> None:
