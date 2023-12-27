@@ -50,7 +50,7 @@ pip3 install --ignore-installed git+https://github.com/EntySec/SeaShell
 
 ### Generating IPA
 
-Simply generate custom IPA file and install it on target's iPhone or iPad.
+Simply generate custom IPA file and install it on target's iPhone or iPad via TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/1.svg">
@@ -58,7 +58,7 @@ Simply generate custom IPA file and install it on target's iPhone or iPad.
 
 ### Starting listener
 
-Then you will need to start a listener on a host and port you added to your IPA. Once installed application will open, you receive a session.
+Then you will need to start a listener on a host and port you added to your IPA. Once the installed application opens, you will receive a connection.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/2.svg">
@@ -66,7 +66,7 @@ Then you will need to start a listener on a host and port you added to your IPA.
 
 ### Accessing device
 
-After you have received a connection you will be able to communicate with session through a shell. Use `interact` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
+Once you have received the connection, you will be able to communicate with the session through a [Pwny](https://github.com/EntySec/Pwny) interactive shell. Use `interact` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/3.svg">
@@ -74,7 +74,7 @@ After you have received a connection you will be able to communicate with sessio
 
 ## Covering them All
 
-Wide range of iOS versions are supported, since all of the are vulnerable to CoreTrust bug. They can be iOS 14, 15, 16 or early 17. Since
+Wide range of iOS versions are supported, since all of them are vulnerable to CoreTrust bug. They can be iOS 14, 15, 16 or early 17.
 
 ## Endless Capabilities
 
@@ -84,6 +84,9 @@ Wide range of iOS versions are supported, since all of the are vulnerable to Cor
 * **2.** Pwny is loaded through `posix_spawn()`.
 * **3.** Connection established and Pwny is ready to receive commands.
 
+## Issues and Bugs
+
+SeaShell was just released and is in **BETA** stage for now. If you find a bug or some function that does not work we will be glad if you immediately submit an issue describing a problem. The more details the issue contains the faster we will be able to fix it.
 ## Legal Use
 
 Note that the code and methods provided in this repository must not be used for malicious purposes and should only be used for testing and experimenting with devices **you own**. Please consider out [Terms of Service](https://github.com/EntySec/SeaShell/blob/main/TERMS_OF_SERVICE.md) before using the tool.
