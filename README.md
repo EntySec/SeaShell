@@ -28,6 +28,16 @@ SeaShell Framework is an iOS post-exploitation framework that exploits the CoreT
 * **Powerful Implant** - SeaShell Framework uses the advanced and powerful payload with lots of features. It is called [Pwny](https://github.com/EntySec/Pwny). You can extend it by adding your own post-exploitation modules or plugins.
 * **Basic Set** - SeaShell Framework comes with basic set of post-exploitation modules that may exfiltrate following user data: DCIM, SMS, VoiceMail, Safari history and much more.
 
+## Installation
+
+To install SeaShell Framework you just need to type this command in your terminal:
+
+```shell
+pip3 install git+https://github.com/EntySec/SeaShell
+```
+
+After this SeaShell can be started with `seashell` command.
+
 ## Usage
 
 ### Generating IPA
