@@ -54,7 +54,7 @@ class HatSploitCommand(Command):
             voicemail_data.append((
                 item['data']['sender'],
                 item['data']['duration'],
-                String().time_normalize(item['data', 'date'])
+                item['data']['date']
             ))
 
         if voicemail_data:
