@@ -33,7 +33,7 @@ SeaShell Framework is an iOS post-exploitation framework that exploits the CoreT
 To install SeaShell Framework you just need to type this command in your terminal:
 
 ```shell
-pip3 install --ignore-installed git+https://github.com/EntySec/SeaShell
+pip3 install git+https://github.com/EntySec/SeaShell
 ```
 
 After this SeaShell can be started with `seashell` command.
