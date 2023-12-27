@@ -75,3 +75,7 @@ Wide range of iOS versions are supported, since all of the are vulnerable to Cor
 * **1.** IPA file installed and opened.
 * **2.** Pwny is loaded through `posix_spawn()`.
 * **3.** Connection established and Pwny is ready to receive commands.
+
+## Legal Use
+
+Note that the code and methods provided in this repository must not be used for malicious purposes and should only be used for testing and experimenting with devices **you own**. Please consider out [Terms of Service](https://github.com/EntySec/SeaShell/blob/main/TERMS_OF_SERVICE.md) before using the tool.
