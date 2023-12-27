@@ -79,9 +79,10 @@ class HatSploitCommand(Command):
                 item['message_id'],
                 item['date'],
                 item['text'],
+                'Sent' if item['is_from_me'] else 'Received'
             ))
 
         if sms_data:
-            self.print_table(f"SMS ({argv[1]})", ('ID', 'Date', 'Text'), *sms_data)
+            self.print_table(f"SMS ({argv[1]})", ('ID', 'Date', 'Text', 'Destination'), *sms_data)
         else:
             self.print_warning(f"No SMS data available for {argv[1]}.")
