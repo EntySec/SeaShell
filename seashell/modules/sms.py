@@ -74,11 +74,11 @@ class HatSploitCommand(Command):
             return
 
         sms_data = []
-        for item in sms:
+        for item in sms['data']:
             sms_data.append((
-                item['data']['message_id'],
-                String().time_normalize(item['data']['timestamp']),
-                item['data']['text'],
+                item['message_id'],
+                String().time_normalize(['timestamp']),
+                item['text'],
             ))
 
         if sms_data:
