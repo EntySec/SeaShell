@@ -24,7 +24,7 @@ SeaShell Framework is an iOS post-exploitation framework that exploits the CoreT
 
 ## Features
 
-* **IPA generator** - All you need to do is generate an IPA file and install it on a target's device via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust. After app was installed, a target simply need to run an app single time.
+* **IPA generator** - All you need to do is generate an IPA file and install it on a target's device via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust. After app was installed, a target simply need to run an app single time (he may close application completely after this).
 * **Powerful Implant** - SeaShell Framework uses the advanced and powerful payload with lots of features. It is called [Pwny](https://github.com/EntySec/Pwny). You can extend it by adding your own post-exploitation modules or plugins.
 * **Basic Set** - SeaShell Framework comes with basic set of post-exploitation modules that may exfiltrate following user data: DCIM, SMS, VoiceMail, Safari history and much more.
 
@@ -50,7 +50,7 @@ pip3 install --ignore-installed git+https://github.com/EntySec/SeaShell
 
 ### Generating IPA
 
-Simply generate custom IPA file and install it on target's iPhone or iPad via TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust.
+Simply generate custom IPA file and install it on target's iPhone or iPad via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/1.svg">
