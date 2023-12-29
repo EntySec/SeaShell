@@ -33,6 +33,7 @@
 #include <arpa/inet.h>
 
 #include <c2.h>
+#include <net.h>
 #include <core.h>
 
 int connectTo(NSString *hostPart, int portPart)
@@ -91,7 +92,7 @@ int main(int argc, const char * argv[]) {
         c2 = NULL;
         sock = connectTo(pairedData[0], [pairedData[1] intValue]);
 
-        c2_add_sock(&c2, 0, sock);
+        c2_add_sock(&c2, 0, sock, NET_PROTO_TLS);
 
         core = core_create(c2);
         core_start(core);
