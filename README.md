@@ -43,7 +43,7 @@ After this SeaShell can be started with `seashell` command.
 To update SeaShell and get new commands run this:
 
 ```shell
-pip3 install --ignore-installed git+https://github.com/EntySec/SeaShell
+pip3 install --force-reinstall git+https://github.com/EntySec/SeaShell
 ```
 
 ## Usage
