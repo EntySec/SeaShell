@@ -20,7 +20,7 @@
     </a>
 </p>
 
-SeaShell Framework is an iOS post-exploitation framework that exploits the CoreTrust bug to remotely access an iPhone or iPad.
+SeaShell Framework is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.
 
 ## Features
 
