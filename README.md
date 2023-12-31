@@ -55,7 +55,7 @@ pip3 install --force-reinstall git+https://github.com/EntySec/SeaShell
 Simply generate custom IPA file and install it on target's iPhone or iPad via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust.
 
 <p align="center">
-  <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/1.svg">
+  <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/ipa.svg">
 </p>
 
 ### Starting listener
@@ -63,7 +63,7 @@ Simply generate custom IPA file and install it on target's iPhone or iPad via [T
 Then you will need to start a listener on a host and port you added to your IPA. Once the installed application opens, you will receive a connection.
 
 <p align="center">
-  <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/2.svg">
+  <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/listen.svg">
 </p>
 
 ### Accessing device
