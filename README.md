@@ -1,4 +1,4 @@
-<h3 align="left">
+<h3 align="center">
     <img src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/logo.png" alt="logo" height="250px">
 </h3>
 
@@ -20,7 +20,7 @@
     </a>
 </p>
 
-SeaShell Framework is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.
+[SeaShell Framework](https://blog.entysec.com/2023-12-31-seashell-ios-malware/) is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.
 
 ## Features
 
