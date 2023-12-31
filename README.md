@@ -1,4 +1,4 @@
-<h3 align="center">
+<h3 align="left">
     <img src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/logo.png" alt="logo" height="250px">
 </h3>
 
