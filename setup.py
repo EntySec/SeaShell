@@ -27,8 +27,7 @@ from setuptools import setup, find_packages
 setup(name='seashell',
       version='1.0.0',
       description=(
-          'SeaShell Framework is an iOS post-exploitation framework that exploits the'
-          ' CoreTrust bug to remotely access an iPhone or iPad.'
+          'SeaShell Framework is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.'
       ),
       url='http://github.com/EntySec/SeaShell',
       author='EntySec',
