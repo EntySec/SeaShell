@@ -69,6 +69,7 @@ class Console(cmd.Cmd):
         self.devices = {}
         self.prompt = ColorScript().parse(
             f'%remove(%lineseashell%end)> ')
+        self.prompt_fill = self.prompt
         self.version = '1.0.0'
 
     def handle_device(self) -> None:
@@ -99,7 +100,7 @@ class Console(cmd.Cmd):
                 )
                 self.hint = True
 
-            self.badges.print_empty(self.prompt, end='')
+            self.badges.print_empty(self.prompt_fill, end='')
 
     def do_help(self, _) -> None:
         """ Show available commands.
@@ -309,7 +310,10 @@ class Console(cmd.Cmd):
             return
 
         self.badges.print_process(f"Interacting with device {str(device_id)}...")
+
+        self.prompt_fill = self.devices[device_id]['device'].device.prompt
         self.devices[device_id]['device'].interact()
+        self.prompt_fill = self.prompt
 
     def do_EOF(self, _):
         """ Catch EOF.

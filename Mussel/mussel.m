@@ -36,6 +36,12 @@
 #include <net.h>
 #include <core.h>
 
+#ifdef DEBUG
+#define NSLog(...) NSLog(__VA_ARGS__)
+#else
+#define NSLog(...) NULL
+#endif
+
 int connectTo(NSString *hostPart, int portPart)
 {
     int sock;

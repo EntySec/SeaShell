@@ -52,7 +52,7 @@ pip3 install --force-reinstall git+https://github.com/EntySec/SeaShell
 
 ### Generating IPA
 
-Simply generate custom IPA file and install it on target's iPhone or iPad via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust.
+Simply generate custom IPA file or patch existing one and install it on target's iPhone or iPad via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/ipa.svg">
