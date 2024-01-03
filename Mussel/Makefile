@@ -45,6 +45,10 @@ $(OBJS): | $(APP_DIR)
 $(APP_DIR):
 	mkdir -p $(APP_DIR)
 
+hook: hook.m
+	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -lobjc -o $@ $<
+	ldid -Sdeps/sign.plist $@
+
 ipa: $(APP_DIR)
 	mkdir Payload
 	cp -r $(APP_DIR) Payload/

