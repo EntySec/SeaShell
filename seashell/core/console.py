@@ -175,7 +175,7 @@ class Console(cmd.Cmd):
             hook = Hook(host, port)
             hook.patch_ipa(ipa)
 
-            self.print_success(f"IPA at {ipa} patched!")
+            self.badges.print_success(f"IPA at {ipa} patched!")
             return
 
         name = self.badges.input_arrow("Application name (Mussel): ")
