@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2020-2023 EntySec
+Copyright (c) 2020-2024 EntySec
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,8 @@ from pex.arch.types import *
 from pex.platform.types import *
 from pex.proto.tcp import TCPListener
 
+from pwny.api import *
+from pwny.types import *
 from pwny.session import PwnySession
 
 from badges import Badges
@@ -62,8 +64,7 @@ class Device(object):
         self.host = self.device.details['Host']
         self.port = self.device.details['Port']
 
-        self.device.prompt = ColorScript().parse(
-            f'%remove(%lineseashell%end: %blue{self.host}%end)> ')
+        self.device.set_prompt('%removepwny:%line$dir%end %blue$user%end$prompt ')
 
     def kill(self) -> None:
         """ Disconnect the specified device.

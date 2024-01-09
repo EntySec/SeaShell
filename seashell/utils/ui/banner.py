@@ -23,40 +23,54 @@ SOFTWARE.
 """
 
 import os
-import pathlib
+import random
+
+from colorscript import ColorScript
+
+from badges import Badges
+
+from seashell.lib.config import Config
 
 
-class Config(object):
+class Banner(object):
     """ Subclass of seashell.core module.
 
-    This subclass of seashell.core module is intended for providing
-    basic configuration for SeaShell.
+    This subclass of seashell.core module is intended for
+    providing tools for printing banners in UI.
     """
 
     def __init__(self) -> None:
         super().__init__()
 
-        self.user_path = f'{pathlib.Path.home()}/.seashell/'
-        self.base_path = f'{os.path.dirname(os.path.dirname(__file__))}/'
-        self.data_path = self.base_path + 'data/'
+        self.config = Config()
 
-        self.banners_path = self.data_path + 'banners/'
-        self.tips_path = self.data_path + 'tips/'
+        self.badges = Badges()
+        self.color_script = ColorScript()
 
-        self.modules_path = self.base_path + 'modules/'
-        self.plugins_path = self.base_path + 'plugins/'
-        self.commands_path = self.base_path + 'commands/'
-
-        self.loot_path = self.user_path + 'loot/'
-
-    def setup(self) -> None:
-        """ Setup config and create paths.
+    def print_random_banner(self) -> None:
+        """ Print random banner.
 
         :return None: None
         """
 
-        if not os.path.exists(self.user_path):
-            os.mkdir(self.user_path)
+        if os.path.exists(self.config.banners_path):
+            banners = []
+            all_banners = os.listdir(self.config.banners_path)
 
-        if not os.path.exists(self.loot_path):
-            os.mkdir(self.loot_path)
+            for banner in all_banners:
+                banners.append(banner)
+
+            if banners:
+                banner = ""
+
+                while not banner:
+                    random_banner = random.randint(0, len(banners) - 1)
+                    banner = self.color_script.parse_file(
+                        self.config.banners_path + banners[random_banner]
+                    )
+
+                self.badges.print_empty(f"%newline%end{banner}%end%newline")
+            else:
+                self.badges.print_warning("No banners detected.")
+        else:
+            self.badges.print_warning("No banners detected.")

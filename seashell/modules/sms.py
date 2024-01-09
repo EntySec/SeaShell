@@ -19,7 +19,7 @@ class HatSploitCommand(Command):
             'Category': "gather",
             'Name': "sms",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - command developer'
+                'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "View device SMS for a partner.",
             'Usage': "sms [-l|<partner>]",

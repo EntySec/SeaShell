@@ -20,7 +20,7 @@ class HatSploitCommand(Command):
             'Category': "evasion",
             'Name': "hook",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - command developer'
+                'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "Hook into other app (e.g. Contacts.app).",
             'Usage': "hook <host> <port> <app_name>",

@@ -20,7 +20,7 @@ class HatSploitCommand(Command):
             'Category': "evasion",
             'Name': "unhook",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - command developer'
+                'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "Remove hook from other app (e.g. Contacts.app).",
             'Usage': "unhook <app_name>",

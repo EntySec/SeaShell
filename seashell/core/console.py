@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2020-2023 EntySec
+Copyright (c) 2020-2024 EntySec
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,20 +25,15 @@ SOFTWARE.
 import os
 import cmd
 import sys
-import threading
-import ctypes
 
 from badges import Badges, Tables
 from colorscript import ColorScript
 
-from seashell.core.banner import Banner
-from seashell.core.tip import Tip
-from seashell.core.device import (
-    Device,
-    DeviceHandler,
-)
-from seashell.core.hook import Hook
-from seashell.core.ipa import IPA
+from hatsploit.lib.commands import Commands
+from hatsploit.lib.runtime import Runtime
+
+from seashell.utils.ui.banner import Banner
+from seashell.utils.ui.tip import Tip
 
 from seashell.lib.config import Config
 
@@ -56,15 +51,24 @@ class Console(cmd.Cmd):
 
         self.badges = Badges()
         self.tables = Tables()
+
         self.banner = Banner()
         self.tip = Tip()
         self.config = Config()
 
+        self.commands = Commands()
+        self.runtime = Runtime()
+
         self.config.setup()
 
-        self.handler = None
-        self.thread = None
-        self.hint = False
+        self.core_commands = sorted([
+            ('clear', 'Clear terminal window.'),
+            ('exit', 'Exit SeaShell Framework.'),
+            ('help', 'Show available commands.'),
+            ('banner', 'Print random banner.'),
+            ('tip', 'Print random tip.'),
+        ])
+        self.custom_commands = {}
 
         self.devices = {}
         self.prompt = ColorScript().parse(
@@ -72,55 +76,14 @@ class Console(cmd.Cmd):
         self.prompt_fill = self.prompt
         self.version = '1.0.0'
 
-    def handle_device(self) -> None:
-        """ Thread to handle devices.
-
-        :return None: None
-        """
-
-        while True:
-            device = self.handler.handle()
-
-            self.devices.update({
-                len(self.devices): {
-                    'host': device.host,
-                    'port': str(device.port),
-                    'device': device
-                }
-            })
-
-            self.badges.print_empty("")
-
-            if not self.hint:
-                self.badges.print_information(
-                    f"Type %greendevices%end to list all connected devices.")
-                self.badges.print_information(
-                    f"Type %greeninteract {str(len(self.devices) - 1)}%end "
-                    "to interact this device."
-                )
-                self.hint = True
-
-            self.badges.print_empty(self.prompt_fill, end='')
-
     def do_help(self, _) -> None:
         """ Show available commands.
 
         :return None: None
         """
 
-        self.tables.print_table("Core Commands", ('Command', 'Description'), *sorted([
-            ('clear', 'Clear terminal window.'),
-            ('devices', 'Show connected devices.'),
-            ('kill', 'Kill device by ID.'),
-            ('listen', 'Start listener in background.'),
-            ('ipa', 'Generate IPA or patch existing.'),
-            ('exit', 'Exit SeaShell Framework.'),
-            ('help', 'Show available commands.'),
-            ('interact', 'Interact with device.'),
-            ('banner', 'Print random banner.'),
-            ('tip', 'Print random tip.'),
-            ('stop', 'Stop listener.'),
-        ]))
+        self.tables.print_table("Core Commands", ('Command', 'Description'), *self.core_commands)
+        self.commands.show_commands(self.custom_commands)
 
     def do_exit(self, _) -> None:
         """ Exit SeaShell Framework.
@@ -159,162 +122,6 @@ class Console(cmd.Cmd):
 
         self.banner.print_random_banner()
 
-    def do_ipa(self, _) -> None:
-        """ Generate IPA.
-
-        :return None: None
-        """
-
-        patch = self.badges.input_question("Patch existing IPA [y/N]: ")
-
-        if patch.lower() in ['y', 'yes']:
-            ipa = self.badges.input_arrow("Path to IPA file: ")
-            host = self.badges.input_arrow("Host to connect back: ")
-            port = self.badges.input_arrow("Port to connect back: ")
-
-            hook = Hook(host, port)
-            hook.patch_ipa(ipa)
-
-            self.badges.print_success(f"IPA at {ipa} patched!")
-            return
-
-        name = self.badges.input_arrow("Application name (Mussel): ")
-        name = name or 'Mussel'
-
-        bundle_id = self.badges.input_arrow("Bundle ID (com.entysec.mussel): ")
-        bundle_id = bundle_id or 'com.entysec.mussel'
-
-        icon = self.badges.input_question("Add application icon [y/N]: ")
-        icon_path = None
-
-        if icon.lower() in ['y', 'yes']:
-            icon_path = self.badges.input_arrow("Icon file path: ")
-
-        host = self.badges.input_arrow("Host to connect back: ")
-        port = self.badges.input_arrow("Port to connect back: ")
-
-        path = self.badges.input_arrow("Path to save the IPA: ")
-
-        ipa = IPA(host, port)
-        ipa.set_name(name, bundle_id)
-
-        if icon_path:
-            ipa.set_icon(icon_path)
-
-        ipa.generate(path)
-        self.badges.print_success(f"IPA saved to {path}!")
-
-    def do_listen(self, pair: str) -> None:
-        """ Start TCP listener.
-
-        :param str pair: host port pair
-        :return None: None
-        """
-
-        pair = pair.split()
-
-        if len(pair) < 2:
-            self.badges.print_usage("listen <host> <port> [timeout]")
-            return
-
-        if self.handler:
-            self.badges.print_warning("Listener is already running.")
-            return
-
-        if len(pair) > 3:
-            host, port, timeout = pair[0], int(pair[1]), int(pair[2])
-        else:
-            host, port = pair[0], int(pair[1])
-            timeout = None
-
-        self.handler = DeviceHandler(host, port, timeout)
-        self.handler.start()
-
-        self.thread = threading.Thread(target=self.handle_device)
-        self.thread.setDaemon(True)
-        self.thread.start()
-
-        self.badges.print_information("Use %greenstop%end to stop.")
-
-    def do_devices(self, _) -> None:
-        """ Show connected devices.
-
-        :return None: None
-        """
-
-        if not self.devices:
-            self.badges.print_warning("No devices connected.")
-            return
-
-        devices = []
-
-        for device in self.devices:
-            devices.append(
-                (device, self.devices[device]['host'],
-                 self.devices[device]['port']))
-
-        self.tables.print_table("Connected Devices", ('ID', 'Host', 'Port'), *devices)
-
-    def do_stop(self, _) -> None:
-        """ Stop listener.
-
-        :return None: None
-        """
-
-        if self.thread.is_alive:
-            exc = ctypes.py_object(SystemExit)
-            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.thread.ident), exc)
-
-            if res > 1:
-                ctypes.pythonapi.PyThreadState_SetAsyncExc(self.thread.ident, None)
-                self.badges.print_error("Failed to stop listener!")
-                return
-
-        self.thread = None
-        self.handler = None
-
-    def do_kill(self, device_id: int) -> None:
-        """ Kill device.
-
-        :param int device_id: device ID
-        :return None: None
-        """
-
-        if not device_id:
-            self.badges.print_usage("kill <id>")
-            return
-
-        device_id = int(device_id)
-
-        if device_id not in self.devices:
-            self.badges.print_error("Invalid device ID!")
-            return
-
-        self.devices[device_id]['device'].kill()
-        self.devices.pop(device_id)
-
-    def do_interact(self, device_id: int) -> None:
-        """ Interact with device.
-
-        :param int device_id: device ID
-        """
-
-        if not device_id:
-            self.badges.print_usage("interact <id>")
-            return
-
-        device_id = int(device_id)
-
-        if device_id not in self.devices:
-            self.badges.print_error("Invalid device ID!")
-            return
-
-        self.badges.print_process(f"Interacting with device {str(device_id)}...")
-
-        self.prompt_fill = self.devices[device_id]['device'].device.prompt
-        self.devices[device_id]['device'].interact()
-        self.prompt_fill = self.prompt
-
     def do_EOF(self, _):
         """ Catch EOF.
 
@@ -331,7 +138,8 @@ class Console(cmd.Cmd):
         :return None: None
         """
 
-        self.badges.print_error(f"Unrecognized command: {line.split()[0]}!")
+        command = line.split()
+        self.commands.execute_custom_command(command, self.custom_commands)
 
     def emptyline(self) -> None:
         """ Do something on empty line.
@@ -341,11 +149,25 @@ class Console(cmd.Cmd):
 
         pass
 
-    def shell(self) -> None:
-        """ Run console shell.
+    def load_commands(self) -> None:
+        """ Load custom SeaShell commands.
 
         :return None: None
         """
+
+        self.custom_commands.update(
+            self.commands.load_commands(self.config.commands_path))
+
+        for command in self.custom_commands:
+            self.custom_commands[command].console = self
+
+    def console(self) -> None:
+        """ Start SeaShell console.
+
+        :return None: None
+        """
+
+        self.load_commands()
 
         modules = 0
         plugins = 0
@@ -374,12 +196,22 @@ class Console(cmd.Cmd):
         self.tip.print_random_tip()
 
         while True:
-            try:
-                cmd.Cmd.cmdloop(self)
+            result = self.runtime.catch(self.shell)
 
-            except (EOFError, KeyboardInterrupt):
-                self.badges.print_empty(end='')
+            if result is not Exception and result:
                 break
 
-            except Exception as e:
-                self.badges.print_error("An error occurred: " + str(e) + "!")
+    def shell(self) -> bool:
+        """ Run console shell.
+
+        :return bool: True to exit
+        """
+
+        try:
+            cmd.Cmd.cmdloop(self)
+
+        except (EOFError, KeyboardInterrupt):
+            self.badges.print_empty(end='')
+            return True
+
+        return False

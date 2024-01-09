@@ -18,7 +18,7 @@ class HatSploitCommand(Command):
             'Category': "gather",
             'Name': "safari_history",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - command developer'
+                'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "View Safari history.",
             'Usage': "safari_history",

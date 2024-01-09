@@ -18,7 +18,7 @@ class HatSploitCommand(Command):
             'Category': "gather",
             'Name': "contacts",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - command developer'
+                'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "View device contacts.",
             'Usage': "contacts",

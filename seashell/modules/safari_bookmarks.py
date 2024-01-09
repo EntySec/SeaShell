@@ -18,7 +18,7 @@ class HatSploitCommand(Command):
             'Category': "gather",
             'Name': "safari_bookmarks",
             'Authors': [
-                'Ivan Nikolsky (enty8080) - command developer'
+                'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "View Safari bookmarks.",
             'Usage': "safari_bookmarks",

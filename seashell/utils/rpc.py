@@ -22,41 +22,50 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import os
-import pathlib
+import threading
+from typing import Any
+
+from seashell.core.device import (
+    Device,
+    DeviceHandler,
+)
+
+from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 
 
-class Config(object):
+class RPC(object):
     """ Subclass of seashell.core module.
 
-    This subclass of seashell.core module is intended for providing
-    basic configuration for SeaShell.
+    This subclass of seashell.core module is a RPC server.
     """
 
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, console: Any, host: str, port: int = 1006) -> None:
+        """ Initialize RPC server.
 
-        self.user_path = f'{pathlib.Path.home()}/.seashell/'
-        self.base_path = f'{os.path.dirname(os.path.dirname(__file__))}/'
-        self.data_path = self.base_path + 'data/'
+        :param Any console: console instance
+        :param str host: host to start RPC server on
+        :param int port: port to start RPC server on
+        """
 
-        self.banners_path = self.data_path + 'banners/'
-        self.tips_path = self.data_path + 'tips/'
+        self.host = host
+        self.port = int(port)
 
-        self.modules_path = self.base_path + 'modules/'
-        self.plugins_path = self.base_path + 'plugins/'
-        self.commands_path = self.base_path + 'commands/'
+        self.console = console
 
-        self.loot_path = self.user_path + 'loot/'
-
-    def setup(self) -> None:
-        """ Setup config and create paths.
+    def run(self) -> None:
+        """ Run RPC server.
 
         :return None: None
         """
 
-        if not os.path.exists(self.user_path):
-            os.mkdir(self.user_path)
+        rpc = SimpleJSONRPCServer((self.host, self.port))
+        commands = self.console.custom_commands
 
-        if not os.path.exists(self.loot_path):
-            os.mkdir(self.loot_path)
+        for command in commands:
+            name = command
+            command = commands[command]
+
+            if hasattr(command, 'rpc'):
+                rpc.register_function(command.rpc, name)
+
+        rpc.serve_forever()
