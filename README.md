@@ -2,23 +2,11 @@
     <img src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/logo.png" alt="logo" height="250px">
 </h3>
 
-<p>
-    <a href="https://entysec.com">
-        <img src="https://img.shields.io/badge/developer-EntySec-blue.svg">
-    </a>
-    <a href="https://github.com/EntySec/SeaShell">
-        <img src="https://img.shields.io/badge/language-Python-blue.svg">
-    </a>
-    <a href="https://github.com/EntySec/SeaShell/forks">
-        <img src="https://img.shields.io/github/forks/EntySec/SeaShell?color=green">
-    </a>
-    <a href="https://github.com/EntySec/SeaShell/stargazers">
-        <img src="https://img.shields.io/github/stars/EntySec/SeaShell?color=yellow">
-    </a>
-    <a href="https://www.codefactor.io/repository/github/EntySec/SeaShell">
-        <img src="https://www.codefactor.io/repository/github/EntySec/SeaShell/badge">
-    </a>
-</p>
+[![Developer](https://img.shields.io/badge/developer-EntySec-blue.svg)](https://entysec.com)
+[![Language](https://img.shields.io/badge/language-Python-blue.svg)](https://github.com/EntySec/SeaShell)
+[![Forks](https://img.shields.io/github/forks/EntySec/SeaShell?style=flat&color=green)](https://github.com/EntySec/SeaShell/forks)
+[![Stars](https://img.shields.io/github/stars/EntySec/SeaShell?style=flat&color=yellow)](https://github.com/EntySec/SeaShell/stargazers)
+[![CodeFactor](https://www.codefactor.io/repository/github/EntySec/SeaShell/badge)](https://www.codefactor.io/repository/github/EntySec/SeaShell)
 
 [SeaShell Framework](https://blog.entysec.com/2023-12-31-seashell-ios-malware/) is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.
 
