@@ -56,7 +56,7 @@ Then you will need to start a listener on a host and port you added to your IPA.
 
 ### Accessing device
 
-Once you have received the connection, you will be able to communicate with the session through a [Pwny](https://github.com/EntySec/Pwny) interactive shell. Use `interact` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
+Once you have received the connection, you will be able to communicate with the session through a [Pwny](https://github.com/EntySec/Pwny) interactive shell. Use `devices -i <id>` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
 
 <p align="center">
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/safari.svg">
