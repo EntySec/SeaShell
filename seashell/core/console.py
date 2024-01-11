@@ -71,7 +71,7 @@ class Console(cmd.Cmd):
         self.custom_commands = {}
 
         self.devices = {}
-        self.prompt = ColorScript().parse(
+        self.prompt = ColorScript().parse_input(
             f'%remove(%lineseashell%end)> ')
         self.prompt_fill = self.prompt
         self.version = '1.0.0'
