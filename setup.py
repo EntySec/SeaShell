@@ -42,6 +42,7 @@ setup(name='seashell',
           ]
       },
       install_requires=[
+          'Pillow',
           'pex @ git+https://github.com/EntySec/Pex',
           'badges @ git+https://github.com/EntySec/Badges',
           'colorscript @ git+https://github.com/EntySec/ColorScript',
