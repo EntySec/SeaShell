@@ -52,10 +52,7 @@ class HatSploitCommand(Command):
 
         elif argv[1] == 'build':
             name = self.input_arrow("Application name (Mussel): ")
-            name = name or 'Mussel'
-
             bundle_id = self.input_arrow("Bundle ID (com.entysec.mussel): ")
-            bundle_id = bundle_id or 'com.entysec.mussel'
 
             icon = self.input_question("Add application icon [y/N]: ")
             icon_path = None
@@ -74,5 +71,4 @@ class HatSploitCommand(Command):
             if icon_path:
                 ipa.set_icon(icon_path)
 
-            ipa.generate(path)
-            self.print_success(f"IPA saved to {path}!")
+            self.print_success(f"IPA saved to {ipa.generate(path)}!")

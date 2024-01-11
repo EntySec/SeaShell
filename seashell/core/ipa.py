@@ -72,8 +72,11 @@ class IPA(object):
         :return None: None
         """
 
-        self.app_name = name.lower().title()
-        self.bundle_id = bundle_id
+        if name:
+            self.app_name = name.lower().title()
+
+        if bundle_id:
+            self.bundle_id = bundle_id
 
     def set_icon(self, icon: str) -> None:
         """ Set application icon.
@@ -84,16 +87,17 @@ class IPA(object):
 
         self.icon = icon
 
-    def generate(self, path: str) -> None:
+    def generate(self, path: str) -> str:
         """ Generate IPA.
 
         :param str path: path to save ipa
-        :return None: None
+        :return str: path to new IPA
         """
 
         self.craft_icons()
         self.craft_plist()
-        self.build_ipa(path)
+
+        return self.build_ipa(path)
 
     def craft_icons(self) -> None:
         """ Craft icons.
@@ -147,11 +151,11 @@ class IPA(object):
         image.resize((76 * 2, 76 * 2), Image.LANCZOS).save(
             app + 'AppIcon76x76@2x.png', 'PNG', quality=100)
 
-    def build_ipa(self, path: str) -> None:
+    def build_ipa(self, path: str) -> str:
         """ Build IPA.
 
         :param str path: path to save ipa
-        :return None: None
+        :return str: path to new IPA
         """
 
         path = os.path.abspath(path)
@@ -170,6 +174,8 @@ class IPA(object):
         shutil.make_archive(archive, 'zip', app)
         shutil.move(archive + '.zip', archive)
         shutil.rmtree(app)
+
+        return archive
 
     def craft_plist(self) -> None:
         """ Craft plist file.

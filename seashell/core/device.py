@@ -22,20 +22,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import os
-
-from pex.string import String
-
 from pex.arch.types import *
 from pex.platform.types import *
 from pex.proto.tcp import TCPListener
 
-from pwny.api import *
-from pwny.types import *
 from pwny.session import PwnySession
 
 from badges import Badges
-from colorscript import ColorScript
 
 from seashell.lib.config import Config
 
