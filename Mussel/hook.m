@@ -47,7 +47,7 @@ NSDictionary *readPlist(NSString *plistPath)
 
 BOOL spawnProcess(NSString *path, NSArray *args)
 {
-	NSMutableArray *argsMutable;
+    NSMutableArray *argsMutable;
 
     NSUInteger iter;
     NSUInteger argsCount;
@@ -115,10 +115,10 @@ BOOL spawnMussel(NSString *plistPath, NSString *musselPath)
 
 int main(int argc, const char *argv[], const char *env[])
 {
-	NSString *appRoot;
-	NSString *hookedPath;
-	NSString *musselPath;
-	NSString *plistPath;
+    NSString *appRoot;
+    NSString *hookedPath;
+    NSString *musselPath;
+    NSString *plistPath;
 
     @autoreleasepool {
     	appRoot = [[NSString stringWithUTF8String:argv[0]] stringByDeletingLastPathComponent];
@@ -126,11 +126,11 @@ int main(int argc, const char *argv[], const char *env[])
     	musselPath = [appRoot stringByAppendingPathComponent:@"mussel"];
     	plistPath = [appRoot stringByAppendingPathComponent:@"Info.plist"];
 
-		NSLog(@"[%s] Hooked path: %@", __PRETTY_FUNCTION__, hookedPath);
-		NSLog(@"[%s] Plist path: %@", __PRETTY_FUNCTION__, plistPath);
+	NSLog(@"[%s] Hooked path: %@", __PRETTY_FUNCTION__, hookedPath);
+	NSLog(@"[%s] Plist path: %@", __PRETTY_FUNCTION__, plistPath);
 
-		NSLog(@"[%s] Executing operation mussel\n", __PRETTY_FUNCTION__);
-		spawnMussel(plistPath, musselPath);
+        NSLog(@"[%s] Executing operation mussel\n", __PRETTY_FUNCTION__);
+	spawnMussel(plistPath, musselPath);
 
         execve([hookedPath UTF8String], (char *const *)argv, (char *const *)env);
         NSLog(@"[%s] Failed to execute the program.", __PRETTY_FUNCTION__);
