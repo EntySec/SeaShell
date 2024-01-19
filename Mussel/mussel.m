@@ -68,7 +68,7 @@ int connectTo(NSString *hostPart, int portPart)
     return sock;
 }
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
     int sock;
 
     NSString *decodedString;

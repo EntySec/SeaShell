@@ -112,10 +112,6 @@ class HatSploitCommand(Command):
             self.print_error("Failed to upload executable!")
             return
 
-        if not self.session.upload(hook.mussel, '/'.join((path, 'mussel'))):
-            self.print_error("Failed to upload mussel!")
-            return
-
         self.print_process("Giving permissions to executable...")
 
         if self.session.send_command(
@@ -126,18 +122,6 @@ class HatSploitCommand(Command):
             }
         ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
             self.print_error(f"Failed to give permissions to executable!")
-            return
-
-        self.print_process("Giving permissions to mussel...")
-
-        if self.session.send_command(
-            tag=FS_CHMOD,
-            args={
-                FS_TYPE_MODE: 777,
-                TLV_TYPE_PATH: '/'.join((path, 'mussel')),
-            }
-        ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
-            self.print_error(f"Failed to give permissions to mussel!")
             return
 
         self.print_success(f"{argv[3]} patched successfully!")

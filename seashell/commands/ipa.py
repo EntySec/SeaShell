@@ -23,6 +23,7 @@ class HatSploitCommand(Command):
             'Usage': "ipa <option> [arguments]",
             'MinArgs': 1,
             'Options': {
+                'check': ['<file>', 'Check if IPA is built or patched.'],
                 'patch': ['<file>', 'Patch existing IPA file.'],
                 'build': ['', 'Build brand new IPA file.']
             }
@@ -41,7 +42,17 @@ class HatSploitCommand(Command):
             ipa.generate(args[1])
 
     def run(self, argc, argv):
-        if argv[1] == 'patch':
+        if argv[1] == 'check':
+            if IPA().check_ipa(argv[2]):
+                self.print_information("IPA is built or patched.")
+            else:
+                self.print_information("IPA is original.")
+
+        elif argv[1] == 'patch':
+            if IPA().check_ipa(argv[2]):
+                self.print_warning("This IPA was already patched.")
+                return
+
             host = self.input_arrow("Host to connect back: ")
             port = self.input_arrow("Port to connect back: ")
 

@@ -20,8 +20,8 @@ class HatSploitCommand(Command):
             'Authors': [
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
-            'Description': "View Safari bookmarks.",
-            'Usage': "safari_bookmarks",
+            'Description': "View Safari bookmarks or save as json.",
+            'Usage': "safari_bookmarks [local_file]",
             'MinArgs': 0
         }
 
@@ -48,7 +48,16 @@ class HatSploitCommand(Command):
             self.print_error("Failed to parse bookmarks database!")
             return
 
+        if argc >= 2:
+            with open(argv[1], 'w') as f:
+                self.print_process(f"Saving bookmarks to {argv[1]}...")
+                json.dump(history, f)
+
+            self.print_success(f"Saved bookmarks to {argv[1]}!")
+            return
+
         bookmarks_data = []
+
         for item in bookmarks:
             bookmarks_data.append((item['title'], item['url']))
 

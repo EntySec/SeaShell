@@ -100,15 +100,6 @@ class HatSploitCommand(Command):
         if self.session.send_command(
             tag=FS_FILE_DELETE,
             args={
-                TLV_TYPE_PATH: '/'.join((path, 'mussel'))
-            }
-        ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
-            self.print_error("Failed to delete mussel!")
-            return
-
-        if self.session.send_command(
-            tag=FS_FILE_DELETE,
-            args={
                 TLV_TYPE_PATH: '/'.join((path, executable))
             }
         ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:

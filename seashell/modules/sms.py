@@ -21,8 +21,8 @@ class HatSploitCommand(Command):
             'Authors': [
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
-            'Description': "View device SMS for a partner.",
-            'Usage': "sms [-l|<partner>]",
+            'Description': "View device SMS for a partner or save as json.",
+            'Usage': "sms [-l|<partner>] [local_file]",
             'MinArgs': 1
         }
 
@@ -50,6 +50,14 @@ class HatSploitCommand(Command):
                 self.print_error(f"Failed to parse SMS chats!")
                 return
 
+            if argc >= 3:
+                with open(argv[2], 'w') as f:
+                    self.print_process(f"Saving SMS chats to {argv[2]}...")
+                    json.dump(history, f)
+
+                self.print_success(f"Saved SMS chats to {argv[2]}!")
+                return
+
             chats_data = []
             chat_id = 0
 
@@ -73,7 +81,16 @@ class HatSploitCommand(Command):
             self.print_error(f"Failed to parse SMS for {argv[1]}!")
             return
 
+        if argc >= 3:
+            with open(argv[2], 'w') as f:
+                self.print_process(f"Saving SMS chat to {argv[2]}...")
+                json.dump(history, f)
+
+            self.print_success(f"Saved SMS chat to {argv[2]}!")
+            return
+
         sms_data = []
+
         for item in sms['data']:
             sms_data.append((
                 item['message_id'],
