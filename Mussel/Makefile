@@ -37,7 +37,7 @@ PORT = 8888
 all: $(OBJS)
 
 $(APP_DIR)/main: main.m
-	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -framework UIKit -lobjc -o $@ util.m $<
+	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -framework UIKit -lobjc -o $@ $<
 	ldid -Sdeps/sign.plist $@
 
 $(APP_DIR)/Info.plist:
@@ -49,7 +49,7 @@ $(APP_DIR):
 	mkdir -p $(APP_DIR)
 
 hook: hook.m
-	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -lobjc -o $@ util.m $<
+	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -lobjc -o $@ $<
 	ldid -Sdeps/sign.plist $@
 	ct_bypass -i $@ -o $@ -r
 

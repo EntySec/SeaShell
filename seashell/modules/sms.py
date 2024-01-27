@@ -3,6 +3,8 @@ This command requires SeaShell: https://github.com/EntySec/SeaShell
 Current source: https://github.com/EntySec/SeaShell
 """
 
+import json
+
 from seashell.lib.loot import Loot
 
 from pex.db import DB

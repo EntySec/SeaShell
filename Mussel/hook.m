@@ -42,7 +42,7 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
 
 BOOL spawnProcess(NSString *path, NSArray *args)
 {
-	NSMutableArray *argsMutable;
+    NSMutableArray *argsMutable;
 
     NSUInteger iter;
     NSUInteger argsCount;
@@ -98,7 +98,7 @@ BOOL spawnProcess(NSString *path, NSArray *args)
 
 BOOL spawnMussel(NSString *plistPath, NSString *musselPath)
 {
-	NSArray *CFBundleSignature;
+    NSArray *CFBundleSignature;
     NSDictionary *dictionary;
 
     dictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
@@ -110,21 +110,21 @@ BOOL spawnMussel(NSString *plistPath, NSString *musselPath)
 
 int main(int argc, const char *argv[], const char *env[])
 {
-	NSString *appRoot;
-	NSString *hookedPath;
-	NSString *musselPath;
-	NSString *plistPath;
+    NSString *appRoot;
+    NSString *hookedPath;
+    NSString *musselPath;
+    NSString *plistPath;
 
     @autoreleasepool {
-    	appRoot = [[NSString stringWithUTF8String:argv[0]] stringByDeletingLastPathComponent];
-    	hookedPath = [[NSString stringWithUTF8String:argv[0]] stringByAppendingString:@".hooked"];
-    	musselPath = [appRoot stringByAppendingPathComponent:@"mussel"];
-    	plistPath = [appRoot stringByAppendingPathComponent:@"Info.plist"];
+        appRoot = [[NSString stringWithUTF8String:argv[0]] stringByDeletingLastPathComponent];
+        hookedPath = [[NSString stringWithUTF8String:argv[0]] stringByAppendingString:@".hooked"];
+        musselPath = [appRoot stringByAppendingPathComponent:@"mussel"];
+        plistPath = [appRoot stringByAppendingPathComponent:@"Info.plist"];
 
-		NSLog(@"[%s] Executing operation mussel\n", __PRETTY_FUNCTION__);
-		spawnMussel(plistPath, musselPath);
+	    NSLog(@"[%s] Executing operation mussel\n", __PRETTY_FUNCTION__);
+	    spawnMussel(plistPath, musselPath);
 
-        NSLog("@ [%s] Executing hooked application\n", __PRETTY_FUNCTION__)
+        NSLog("@ [%s] Executing hooked application\n", __PRETTY_FUNCTION__);
         execve([hookedPath UTF8String], (char *const *)argv, (char *const *)env);
 
         NSLog(@"[%s] Failed to execute the program.", __PRETTY_FUNCTION__);

@@ -42,7 +42,8 @@ setup(name='seashell',
           ]
       },
       install_requires=[
-          'customtkinter',
+          'Pillow',
+          'alive-progress',
           'pex @ git+https://github.com/EntySec/Pex',
           'badges @ git+https://github.com/EntySec/Badges',
           'colorscript @ git+https://github.com/EntySec/ColorScript',

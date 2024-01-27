@@ -162,7 +162,7 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
 
 @end
 
-int main(int argc, const char *argv[])
+int main(int argc, char *argv[])
 {
     @autoreleasepool {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
