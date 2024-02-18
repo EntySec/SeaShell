@@ -26,8 +26,8 @@ import os
 import shutil
 import plistlib
 
+from alive_progress import alive_bar
 from typing import Optional
-
 from pex.string import String
 
 from seashell.lib.config import Config
@@ -69,32 +69,34 @@ class Hook(object):
         :return None: None
         """
 
-        shutil.unpack_archive(path, format='zip')
-        app_files = [file for file in os.listdir('Payload') if file.endswith('.app')]
+        with alive_bar(monitor=False, stats=False, ctrl_c=False, receipt=False,
+                       title="Patching {}".format(path)) as _:
+            shutil.unpack_archive(path, format='zip')
+            app_files = [file for file in os.listdir('Payload') if file.endswith('.app')]
 
-        if not app_files:
-            return
+            if not app_files:
+                return
 
-        bundle = '/'.join(('Payload', app_files[0] + '/'))
-        executable = self.get_executable(bundle + 'Info.plist')
+            bundle = '/'.join(('Payload', app_files[0] + '/'))
+            executable = self.get_executable(bundle + 'Info.plist')
 
-        self.patch_plist(bundle + 'Info.plist')
+            self.patch_plist(bundle + 'Info.plist')
 
-        shutil.move(bundle + executable, bundle + executable + '.hooked')
-        shutil.copy(self.main, bundle + executable)
-        shutil.copy(self.mussel, bundle + 'mussel')
+            shutil.move(bundle + executable, bundle + executable + '.hooked')
+            shutil.copy(self.main, bundle + executable)
+            shutil.copy(self.mussel, bundle + 'mussel')
 
-        os.chmod(bundle + executable, 777)
-        os.chmod(bundle + 'mussel', 777)
+            os.chmod(bundle + executable, 777)
+            os.chmod(bundle + 'mussel', 777)
 
-        app = path[:-4]
-        os.remove(path)
+            app = path[:-4]
+            os.remove(path)
 
-        os.mkdir(app)
-        shutil.move('Payload', app)
-        shutil.make_archive(path, 'zip', app)
-        shutil.move(path + '.zip', path)
-        shutil.rmtree(app)
+            os.mkdir(app)
+            shutil.move('Payload', app)
+            shutil.make_archive(path, 'zip', app)
+            shutil.move(path + '.zip', path)
+            shutil.rmtree(app)
 
     @staticmethod
     def get_executable(path: str) -> str:
@@ -124,9 +126,9 @@ class Hook(object):
             plist_data = plistlib.load(f)
 
         if not revert:
-            plist_data['CFBundleBase64Hash'] = self.hash
+            plist_data['CFBundleSignature'] = self.hash
         else:
-            del plist_data['CFBundleBase64Hash']
+            plist_data['CFBundleSignature'] = '????'
 
         with open(path, 'wb') as f:
             plistlib.dump(plist_data, f)

@@ -28,9 +28,11 @@ from pex.proto.tcp import TCPListener
 
 from pwny.session import PwnySession
 
+from typing import Tuple
 from badges import Badges
 
 from seashell.lib.config import Config
+from seashell.core.api import *
 
 
 class Device(object):
@@ -57,7 +59,36 @@ class Device(object):
         self.host = self.device.details['Host']
         self.port = self.device.details['Port']
 
-        self.device.set_prompt('%removepwny:%line$dir%end %blue$user%end$prompt ')
+        self.name = None
+        self.os = None
+        self.model = None
+        self.serial = None
+        self.udid = None
+
+    def update_details(self) -> None:
+        """ Update device details.
+
+        :return None: None
+        """
+
+        result = self.device.send_command(tag=GATHER_GET_INFO)
+
+        self.name = result.get_string(GATHER_NAME)
+        self.os = result.get_string(GATHER_OS)
+        self.model = result.get_string(GATHER_MODEL)
+        self.serial = result.get_string(GATHER_SERIAL)
+        self.udid = result.get_string(GATHER_UDID)
+
+    def locate(self) -> Tuple[str, str]:
+        """ Get device current latitude and longitude.
+
+        :return Tuple[str, str]: tuple of latitude and longitude
+        """
+
+        result = self.device.send_command(tag=LOCATE_GET)
+
+        return result.get_string(LOCATE_LATITUDE), \
+            result.get_string(LOCATE_LONGITUDE)
 
     def kill(self) -> None:
         """ Disconnect the specified device.
@@ -79,8 +110,6 @@ class Device(object):
         self.device.load_plugins(self.config.plugins_path)
 
         self.badges.print_success("Interactive connection spawned!")
-
-        self.badges.print_empty("")
         self.device.interact()
 
 

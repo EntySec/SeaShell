@@ -47,27 +47,21 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
 
 @implementation AppDelegate
 
--(NSDictionary *)readInfoPlist
-{
-    NSString *plistPath;
-
-    plistPath = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
-    return [NSDictionary dictionaryWithContentsOfFile:plistPath];
-}
-
 -(BOOL)spawnMussel
 {
-    NSArray *CFBundleBase64Hash;
+    NSString *plistPath;
+    NSArray *CFBundleSignature;
     NSDictionary *dictionary;
     NSString *path;
 
-    dictionary = [self readInfoPlist];
-    CFBundleBase64Hash = @[dictionary[@"CFBundleBase64Hash"]];
+    plistPath = [[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"];
+    dictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    CFBundleSignature = @[dictionary[@"CFBundleSignature"]];
 
     path = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"mussel"];
 
-    NSLog(@"[%s] Will connect to %@ %@\n", __PRETTY_FUNCTION__, CFBundleBase64Hash[0], path);
-    return [self spawnProcess:path args:CFBundleBase64Hash];
+    NSLog(@"[%s] Will connect to %@ %@\n", __PRETTY_FUNCTION__, CFBundleSignature[0], path);
+    return [self spawnProcess:path args:CFBundleSignature];
 }
 
 -(int)spawnProcess:(NSString *)path args:(NSArray *)args

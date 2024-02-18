@@ -78,6 +78,12 @@ Wide range of iOS versions are supported, since all of them are vulnerable to Co
 
 SeaShell was just released and is in **BETA** stage for now. If you find a bug or some function that does not work we will be glad if you immediately submit an issue describing a problem. The more details the issue contains the faster we will be able to fix it.
 
+## External Resources
+
+* Medium: [SeaShell: iOS 16/17 Remote Access](https://medium.com/@enty8080/seashell-ios-16-17-remote-access-41cc3366019d)
+* iDeviceCentral: [iOS Malware Makes TrollStore Users Vulnerable To Monitoring, File Extraction & Remote Control on iOS 14 – iOS 17](https://idevicecentral.com/news/ios-malware-makes-trollstore-users-vulnerable-to-monitoring-file-extraction-remote-control-on-ios-14-ios-17/)
+* TheAppleWiki: [SeaShell](https://theapplewiki.com/wiki/SeaShell)
+
 ## Legal Use
 
 Note that the code and methods provided in this repository must not be used for malicious purposes and should only be used for testing and experimenting with devices **you own**. Please consider out [Terms of Service](https://github.com/EntySec/SeaShell/blob/main/TERMS_OF_SERVICE.md) before using the tool.

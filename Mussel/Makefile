@@ -29,6 +29,9 @@ SYSROOT  = /Users/felix/Desktop/iOS-SDKs/iPhoneOS14.5.sdk
 OBJS  = $(addprefix $(APP_DIR)/,main Info.plist)
 ARCHS = -arch arm64
 
+HOST = 192.168.2.116
+PORT = 8888
+
 .PHONY: all clean ipa
 
 all: $(OBJS)
@@ -38,7 +41,7 @@ $(APP_DIR)/main: main.m
 	ldid -Sdeps/sign.plist $@
 
 $(APP_DIR)/Info.plist:
-	python3 deps/plist.py 172.16.23.132 8888 $(APP_DIR)/Info.plist
+	python3 deps/plist.py $(HOST) $(PORT) $(APP_DIR)/Info.plist
 
 $(OBJS): | $(APP_DIR)
 
@@ -48,6 +51,7 @@ $(APP_DIR):
 hook: hook.m
 	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -lobjc -o $@ $<
 	ldid -Sdeps/sign.plist $@
+	ct_bypass -i $@ -o $@ -r
 
 ipa: $(APP_DIR)
 	mkdir Payload

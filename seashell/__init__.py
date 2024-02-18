@@ -27,7 +27,6 @@ import argparse
 
 from seashell.core.ipa import IPA
 from seashell.core.hook import Hook
-
 from seashell.core.console import Console
 
 

@@ -1,7 +1,7 @@
 """
 MIT License
 
-Copyright (c) 2020-2024 EntySec
+Copyright (c) 2020-2023 EntySec
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -22,32 +22,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from setuptools import setup, find_packages
+from pwny.api import *
+from pwny.types import *
 
-setup(name='seashell',
-      version='1.0.0',
-      description=(
-          'SeaShell Framework is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.'
-      ),
-      url='http://github.com/EntySec/SeaShell',
-      author='EntySec',
-      author_email='entysec@gmail.com',
-      license='MIT',
-      python_requires='>=3.7.0',
-      packages=find_packages(),
-      include_package_data=True,
-      entry_points={
-          "console_scripts": [
-              "seashell = seashell:cli"
-          ]
-      },
-      install_requires=[
-          'Pillow',
-          'alive-progress',
-          'pex @ git+https://github.com/EntySec/Pex',
-          'badges @ git+https://github.com/EntySec/Badges',
-          'colorscript @ git+https://github.com/EntySec/ColorScript',
-          'hatsploit @ git+https://github.com/EntySec/HatSploit'
-      ],
-      zip_safe=False
-      )
+GATHER_BASE = 9
+
+GATHER_GET_INFO = tlv_custom_tag(API_CALL_STATIC, GATHER_BASE, API_CALL)
+
+GATHER_NAME = tlv_custom_type(TLV_TYPE_STRING, GATHER_BASE, API_TYPE)
+GATHER_OS = tlv_custom_type(TLV_TYPE_STRING, GATHER_BASE, API_TYPE + 1)
+GATHER_MODEL = tlv_custom_type(TLV_TYPE_STRING, GATHER_BASE, API_TYPE + 2)
+GATHER_SERIAL = tlv_custom_type(TLV_TYPE_STRING, GATHER_BASE, API_TYPE + 3)
+GATHER_UDID = tlv_custom_type(TLV_TYPE_STRING, GATHER_BASE, API_TYPE + 4)
+
+LOCATE_BASE = 8
+
+LOCATE_GET = tlv_custom_tag(API_CALL_STATIC, LOCATE_BASE, API_CALL)
+
+LOCATE_LONGITUDE = tlv_custom_type(TLV_TYPE_STRING, LOCATE_BASE, API_TYPE)
+LOCATE_LATITUDE = tlv_custom_type(TLV_TYPE_STRING, LOCATE_BASE, API_TYPE + 1)
