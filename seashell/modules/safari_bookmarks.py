@@ -53,7 +53,7 @@ class HatSploitCommand(Command):
         if argc >= 2:
             with open(argv[1], 'w') as f:
                 self.print_process(f"Saving bookmarks to {argv[1]}...")
-                json.dump(history, f)
+                json.dump(bookmarks, f)
 
             self.print_success(f"Saved bookmarks to {argv[1]}!")
             return

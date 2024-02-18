@@ -55,7 +55,7 @@ class HatSploitCommand(Command):
             if argc >= 3:
                 with open(argv[2], 'w') as f:
                     self.print_process(f"Saving SMS chats to {argv[2]}...")
-                    json.dump(history, f)
+                    json.dump(chats, f)
 
                 self.print_success(f"Saved SMS chats to {argv[2]}!")
                 return
@@ -86,7 +86,7 @@ class HatSploitCommand(Command):
         if argc >= 3:
             with open(argv[2], 'w') as f:
                 self.print_process(f"Saving SMS chat to {argv[2]}...")
-                json.dump(history, f)
+                json.dump(sms, f)
 
             self.print_success(f"Saved SMS chat to {argv[2]}!")
             return
