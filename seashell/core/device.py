@@ -56,8 +56,9 @@ class Device(object):
         self.badges = Badges()
         self.device = session
 
-        self.host = self.device.details['Host']
-        self.port = self.device.details['Port']
+        self.uuid = session.uuid
+        self.host = session.details['Host']
+        self.port = session.details['Port']
 
         self.name = None
         self.os = None
