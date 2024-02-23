@@ -143,7 +143,7 @@ class DeviceHandler(TCPListener):
         self.badges.print_process(f"Listening on TCP port {str(self.port)}...")
         self.listen()
 
-    def handle(self) -> Device:
+    def handle(self, *args, **kwargs) -> Device:
         """ Accept connection and wrap it with Device.
 
         :return Device: device instance
@@ -158,7 +158,7 @@ class DeviceHandler(TCPListener):
             'Host': self.address[0],
             'Port': self.port,
         })
-        session.open(self.client, loader=False)
+        session.open(self.client, False, *args, **kwargs)
 
         self.badges.print_success(
             f"New device connected - {self.address[0]}!")
