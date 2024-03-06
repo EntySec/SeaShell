@@ -167,8 +167,6 @@ class Console(cmd.Cmd):
         :return None: None
         """
 
-        self.load_commands()
-
         modules = 0
         plugins = 0
 
@@ -194,6 +192,7 @@ class Console(cmd.Cmd):
         self.badges.print_empty(header)
 
         self.tip.print_random_tip()
+        self.load_commands()
 
         while True:
             result = self.runtime.catch(self.shell)
