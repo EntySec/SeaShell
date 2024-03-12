@@ -64,7 +64,7 @@ Once you have received the connection, you will be able to communicate with the 
 
 ## Covering them All
 
-A wide range of iOS versions are supported, being 14.0 beta 2 - 16.6.1, 16.7 RC, and 17.0 beta 1 - 17.0, as these are vulnerable to the CoreTrust bug.
+A wide range of iOS versions are supported, being 14.0 beta 2 - 16.6.1, 16.7 RC, and 17.0 beta 1 - 17.0, as these versions are vulnerable to the CoreTrust bug.
 
 ## Endless Capabilities
 
