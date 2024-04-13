@@ -42,6 +42,7 @@ setup(name='seashell',
           ]
       },
       install_requires=[
+	  'getch',
           'Pillow',
           'alive-progress',
           'pex @ git+https://github.com/EntySec/Pex',
