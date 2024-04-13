@@ -24,30 +24,28 @@ SOFTWARE.
 
 from setuptools import setup, find_packages
 
-setup(name='seashell',
-      version='1.0.0',
-      description=(
-          'SeaShell Framework is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.'
-      ),
-      url='http://github.com/EntySec/SeaShell',
-      author='EntySec',
-      author_email='entysec@gmail.com',
-      license='MIT',
-      python_requires='>=3.7.0',
-      packages=find_packages(),
-      include_package_data=True,
-      entry_points={
-          "console_scripts": [
-              "seashell = seashell:cli"
-          ]
-      },
-      install_requires=[
-          'Pillow',
-          'alive-progress',
-          'pex @ git+https://github.com/EntySec/Pex',
-          'badges @ git+https://github.com/EntySec/Badges',
-          'colorscript @ git+https://github.com/EntySec/ColorScript',
-          'hatsploit @ git+https://github.com/EntySec/HatSploit'
-      ],
-      zip_safe=False
-      )
+setup(
+    name="seashell",
+    version="1.0.0",
+    description=(
+        "SeaShell Framework is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information."
+    ),
+    url="http://github.com/EntySec/SeaShell",
+    author="EntySec",
+    author_email="entysec@gmail.com",
+    license="MIT",
+    python_requires=">=3.7.0",
+    packages=find_packages(),
+    include_package_data=True,
+    entry_points={"console_scripts": ["seashell = seashell:cli"]},
+    install_requires=[
+        "getch",
+        "Pillow",
+        "alive-progress",
+        "pex @ git+https://github.com/EntySec/Pex",
+        "badges @ git+https://github.com/EntySec/Badges",
+        "colorscript @ git+https://github.com/EntySec/ColorScript",
+        "hatsploit @ git+https://github.com/EntySec/HatSploit",
+    ],
+    zip_safe=False,
+)
