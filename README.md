@@ -83,6 +83,7 @@ SeaShell was just released and is in **BETA** stage for now. If you find a bug o
 * Medium: [SeaShell: iOS 16/17 Remote Access](https://medium.com/@enty8080/seashell-ios-16-17-remote-access-41cc3366019d)
 * iDeviceCentral: [iOS Malware Makes TrollStore Users Vulnerable To Monitoring, File Extraction & Remote Control on iOS 14 – iOS 17](https://idevicecentral.com/news/ios-malware-makes-trollstore-users-vulnerable-to-monitoring-file-extraction-remote-control-on-ios-14-ios-17/)
 * TheAppleWiki: [SeaShell](https://theapplewiki.com/wiki/SeaShell)
+* One Jailbreak: [SeaShell Trojan Horse iOS](https://onejailbreak.com/blog/seashell-trojan-horse-ios/)
 
 ## Legal Use
 
