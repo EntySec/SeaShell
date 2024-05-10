@@ -1,8 +1,10 @@
 # Mussel
 
-First phase loader for SeaShell written specifically for iOS versions vulnerable to CoreTrust bug.
+Loader (trampoline) for SeaShell payload written for iOS devices vulnerable to CoreTrust bug.
 
-## Makefile
+## Building
+
+`make <option>`
 
 * `all` - Build application bundle
 * `ipa` - Build IPA file from application bundle
