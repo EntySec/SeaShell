@@ -41,25 +41,19 @@ class Hook(object):
     """
 
     def __init__(self, host: Optional[str] = None,
-                 port: Optional[int] = None,
-                 uuid: Optional[str] = None) -> None:
+                 port: Optional[int] = None) -> None:
         """ Initialize device hook.
 
         :param Optional[str] host: host
         :param Optional[int] port: port
-        :param Optional[str] uuid: custom user-defined UUID
         :return None: None
         """
 
         self.config = Config()
 
         if host and port:
-            if uuid:
-                self.hash = String().base64_string(
-                    f'{host}:{str(port)}:{uuid}', decode=True)
-            else:
-                self.hash = String().base64_string(
-                    f'{host}:{str(port)}', decode=True)
+            self.hash = String().base64_string(
+                f'tcp://{host}:{str(port)}', decode=True)
         else:
             self.hash = ''
 
