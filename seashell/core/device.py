@@ -57,8 +57,8 @@ class Device(object):
         self.device = session
 
         self.uuid = session.uuid
-        self.host = session.details['Host']
-        self.port = session.details['Port']
+        self.client = (session.details['Host'], session.details['Port'])
+        self.server = ()
 
         self.name = None
         self.os = None
@@ -156,6 +156,10 @@ class DeviceHandler(TCPListener):
             'Port': self.port,
         })
         session.open(self.client)
+
+        device = Device(session)
+        device.server = self.server
+        session.device = device
 
         self.badges.print_success(
             f"New device connected - {self.address[0]}!")

@@ -1,3 +1,4 @@
+
 /*
  * MIT License
  *
@@ -48,7 +49,8 @@ int main(int argc, const char *argv[])
         core = core_create();
 
         core_setup(core);
-        core_add_uri([decodedString UTF8String]);
+        core_set_path(core, realpath(argv[0], NULL));
+        core_add_uri(core, (char *)[decodedString UTF8String]);
 
         core_start(core);
         core_destroy(core);

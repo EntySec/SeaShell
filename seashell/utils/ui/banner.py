@@ -69,7 +69,9 @@ class Banner(object):
                         self.config.banners_path + banners[random_banner]
                     )
 
+                self.badges.set_less(False)
                 self.badges.print_empty(f"%newline%end{banner}%end%newline")
+                self.badges.set_less(True)
             else:
                 self.badges.print_warning("No banners detected.")
         else:

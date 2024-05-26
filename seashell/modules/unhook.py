@@ -22,14 +22,15 @@ class HatSploitCommand(Command):
             'Authors': [
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
-            'Description': "Remove hook from other app (e.g. Contacts.app).",
-            'Usage': "unhook <app_name>",
+            'Description': "Remove hook from other app (e.g. Contacts).",
+            'Usage': "unhook <app>",
             'MinArgs': 1
         }
 
         self.plist = Loot().specific_loot('Info.plist')
 
     def find_app(self, app_name):
+        app_name += '.app'
         containers = '/private/var/containers/Bundle/Application'
 
         result = self.session.send_command(
