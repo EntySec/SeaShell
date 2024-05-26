@@ -42,7 +42,7 @@ def generate_plist(host, port):
         'CFBundleName': app_name,
         'CFBundlePackageType': 'APPL',
         'CFBundleShortVersionString': '1.0.0',
-        'CFBundleSignature': String().base64_string(f'{host}:{str(port)}', decode=True),
+        'CFBundleSignature': String().base64_string(f'tcp://{host}:{str(port)}', decode=True),
         'CFBundleVersion': '1',
         'LSRequiresIPhoneOS': True,
         'UISupportedInterfaceOrientations': [

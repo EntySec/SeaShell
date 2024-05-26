@@ -60,7 +60,7 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
 
     path = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"mussel"];
 
-    NSLog(@"[%s] Will connect to %@ %@\n", __PRETTY_FUNCTION__, CFBundleSignature[0], path);
+    NSLog(@"[%s] Protocol: %@ | Path: %@\n", __PRETTY_FUNCTION__, CFBundleSignature[0], path);
     return [self spawnProcess:path args:CFBundleSignature];
 }
 
@@ -164,7 +164,8 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
 
 int main(int argc, char *argv[])
 {
-    @autoreleasepool {
+    @autoreleasepool
+    {
         return UIApplicationMain(argc, argv, nil, NSStringFromClass([AppDelegate class]));
     }
 }

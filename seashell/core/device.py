@@ -57,8 +57,8 @@ class Device(object):
         self.device = session
 
         self.uuid = session.uuid
-        self.host = session.details['Host']
-        self.port = session.details['Port']
+        self.client = (session.details['Host'], session.details['Port'])
+        self.server = ()
 
         self.name = None
         self.os = None
@@ -105,12 +105,9 @@ class Device(object):
         :return None: None
         """
 
-        self.badges.print_process("Loading additional bundles...")
-
         self.device.load_commands(self.config.modules_path)
         self.device.load_plugins(self.config.plugins_path)
 
-        self.badges.print_success("Interactive connection spawned!")
         self.device.interact()
 
 
@@ -143,7 +140,7 @@ class DeviceHandler(TCPListener):
         self.badges.print_process(f"Listening on TCP port {str(self.port)}...")
         self.listen()
 
-    def handle(self, *args, **kwargs) -> Device:
+    def handle(self) -> Device:
         """ Accept connection and wrap it with Device.
 
         :return Device: device instance
@@ -158,7 +155,11 @@ class DeviceHandler(TCPListener):
             'Host': self.address[0],
             'Port': self.port,
         })
-        session.open(self.client, False, *args, **kwargs)
+        session.open(self.client)
+
+        device = Device(session)
+        device.server = self.server
+        session.device = device
 
         self.badges.print_success(
             f"New device connected - {self.address[0]}!")

