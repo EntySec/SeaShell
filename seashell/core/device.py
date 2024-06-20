@@ -164,4 +164,4 @@ class DeviceHandler(TCPListener):
         self.badges.print_success(
             f"New device connected - {self.address[0]}!")
 
-        return Device(session)
+        return device
