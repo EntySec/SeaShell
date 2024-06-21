@@ -62,6 +62,14 @@ Once you have received the connection, you will be able to communicate with the 
   <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/safari.svg">
 </p>
 
+## Available commands
+
+Find the map of available commands. New commands/modules being added regularly so this list might be outdated.
+
+<h3 align="center">
+    <img width="70%" src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/builtins.png">
+</h3>
+
 ## Covering them All
 
 A wide range of iOS versions are supported, being 14.0 beta 2 - 16.6.1, 16.7 RC, and 17.0 beta 1 - 17.0, as these versions are vulnerable to the CoreTrust bug.
