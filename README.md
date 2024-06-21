@@ -67,7 +67,7 @@ Once you have received the connection, you will be able to communicate with the 
 Find the map of available commands. New commands/modules being added regularly so this list might be outdated.
 
 <h3 align="center">
-    <img width="70%" src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/builtins.png">
+    <img width="100%" src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/builtins.png">
 </h3>
 
 ## Covering them All
