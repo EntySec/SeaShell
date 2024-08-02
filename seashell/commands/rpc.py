@@ -5,14 +5,12 @@ Current source: https://github.com/EntySec/SeaShell
 
 from seashell.utils.rpc import RPC
 
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "manage",
             'Name': "rpc",
             'Authors': [
@@ -25,20 +23,20 @@ class HatSploitCommand(Command):
                 'on': ['<host> <port>', 'Turn RPC server on.'],
                 'off': ['', 'Turn RPC server off.'],
             }
-        }
+        })
 
         self.rpc = None
 
-    def run(self, argc, argv):
-        if argv[1] == 'on':
+    def run(self, args):
+        if args[1] == 'on':
             if self.rpc:
                 self.print_warning("RPC server is already running.")
                 return
 
-            self.rpc = RPC(self.console, argv[2], argv[3])
+            self.rpc = RPC(self.console, args[2], args[3])
             self.rpc.run()
 
-        elif argv[1] == 'off':
+        elif args[1] == 'off':
             if not self.rpc:
                 self.print_warning("RPC server is not running.")
                 return

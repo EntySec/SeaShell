@@ -11,14 +11,12 @@ from seashell.core.device import (
     DeviceHandler
 )
 
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "manage",
             'Name': "listener",
             'Authors': [
@@ -31,7 +29,7 @@ class HatSploitCommand(Command):
                 'on': ['<host> <port>', 'Start TCP listener.'],
                 'off': ['', 'Stop TCP listener.']
             }
-        }
+        })
 
         self.hint = False
         self.handler = None
@@ -50,41 +48,40 @@ class HatSploitCommand(Command):
                 len(self.console.devices): {
                     'host': device.client[0],
                     'port': str(device.client[1]),
+                    'platform': str(device.platform),
                     'device': device
                 }
             })
 
             if not self.hint:
                 self.print_information(
-                    f"Type %greendevices -l%end to list all connected devices.")
+                    f"Type %greendevices list%end to list all connected devices.")
                 self.print_information(
-                    f"Type %greendevices -i {str(len(self.console.devices) - 1)}%end "
+                    f"Type %greendevices interact {str(len(self.console.devices) - 1)}%end "
                     "to interact this device."
                 )
                 self.hint = True
-
-            self.print_empty(self.console.prompt_fill, end='')
 
     def rpc(self, *args):
         if len(args) < 1:
             return
 
         if args[0] == 'off':
-            return self.run(2, [self.details['Name'], 'off'])
+            return self.run([self.info['Name'], 'off'])
 
         if args[0] == 'on':
             if len(args) < 3:
                 return
 
-            return self.run(4, [self.details['Name'], 'on', args[1], args[2]])
+            return self.run([self.info['Name'], 'on', args[1], args[2]])
 
-    def run(self, argc, argv):
-        if argv[1] == 'on':
+    def run(self, args):
+        if args[1] == 'on':
             if self.handler:
                 self.print_warning("TCP listener is already running.")
                 return
 
-            self.handler = DeviceHandler(argv[2], argv[3], None)
+            self.handler = DeviceHandler(args[2], args[3], None)
             self.handler.start()
 
             self.thread = threading.Thread(target=self.handle_device)
@@ -93,7 +90,7 @@ class HatSploitCommand(Command):
 
             self.print_information("Use %greenlistener off%end to stop.")
 
-        elif argv[1] == 'off':
+        elif args[1] == 'off':
             if not self.handler:
                 self.print_warning("TCP listener is not started.")
                 return

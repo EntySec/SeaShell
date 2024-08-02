@@ -8,14 +8,12 @@ from seashell.core.hook import Hook
 
 from pex.proto.tcp import TCPTools
 
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "manage",
             'Name': "ipa",
             'Authors': [
@@ -29,7 +27,7 @@ class HatSploitCommand(Command):
                 'patch': ['<file>', 'Patch existing IPA file.'],
                 'build': ['', 'Build brand new IPA file.']
             }
-        }
+        })
 
     def rpc(self, *args):
         if len(args) < 4:
@@ -43,17 +41,17 @@ class HatSploitCommand(Command):
             ipa = IPA(args[2], args[3])
             ipa.generate(args[1])
 
-    def run(self, argc, argv):
+    def run(self, args):
         local_host = TCPTools.get_local_host()
 
-        if argv[1] == 'check':
-            if IPA().check_ipa(argv[2]):
+        if args[1] == 'check':
+            if IPA(None, None).check_ipa(args[2]):
                 self.print_information("IPA is built or patched.")
             else:
                 self.print_information("IPA is original.")
 
-        elif argv[1] == 'patch':
-            if IPA().check_ipa(argv[2]):
+        elif args[1] == 'patch':
+            if IPA(None, None).check_ipa(args[2]):
                 self.print_warning("This IPA was already patched.")
                 return
 
@@ -64,11 +62,11 @@ class HatSploitCommand(Command):
             port = port or 8888
 
             hook = Hook(host, port)
-            hook.patch_ipa(argv[2])
+            hook.patch_ipa(args[2])
 
-            self.print_success(f"IPA at {argv[2]} patched!")
+            self.print_success(f"IPA at {args[2]} patched!")
 
-        elif argv[1] == 'build':
+        elif args[1] == 'build':
             name = self.input_arrow("Application name (Mussel): ")
             bundle_id = self.input_arrow("Bundle ID (com.entysec.mussel): ")
 

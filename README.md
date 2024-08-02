@@ -8,11 +8,10 @@
 [![Stars](https://img.shields.io/github/stars/EntySec/SeaShell?style=flat&color=yellow)](https://github.com/EntySec/SeaShell/stargazers)
 [![CodeFactor](https://www.codefactor.io/repository/github/EntySec/SeaShell/badge)](https://www.codefactor.io/repository/github/EntySec/SeaShell)
 
-[SeaShell Framework](https://blog.entysec.com/2023-12-31-seashell-ios-malware/) is an iOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.
+[SeaShell Framework](https://blog.entysec.com/2023-12-31-seashell-ios-malware/) is an iOS/macOS post-exploitation framework that enables you to access the device remotely, control it and extract sensitive information.
 
 ## Features
 
-* **IPA generator** - All you need to do is generate an IPA file and install it on a target's device via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust. After app was installed, a target simply need to run an app single time (he may close application completely after this).
 * **Powerful Implant** - SeaShell Framework uses the advanced and powerful payload with lots of features. It is called [Pwny](https://github.com/EntySec/Pwny). You can extend it by adding your own post-exploitation modules or plugins.
 * **Basic Set** - SeaShell Framework comes with basic set of post-exploitation modules that may exfiltrate following user data: SMS, VoiceMail, Safari history and much more.
 * **Encrypted communication** - Communication between device and SeaShell is encrypted using the [TLS 1.3](https://en.wikipedia.org/wiki/Transport_Layer_Security) encryption by default.

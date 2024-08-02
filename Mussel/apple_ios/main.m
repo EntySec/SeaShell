@@ -37,9 +37,9 @@
 #endif
 
 #define POSIX_SPAWN_PERSONA_FLAGS_OVERRIDE 1
-extern int posix_spawnattr_set_persona_np(const posix_spawnattr_t* __restrict, uid_t, uint32_t);
-extern int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t* __restrict, uid_t);
-extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restrict, uid_t);
+extern int posix_spawnattr_set_persona_np(const posix_spawnattr_t *__restrict, uid_t, uint32_t);
+extern int posix_spawnattr_set_persona_uid_np(const posix_spawnattr_t *__restrict, uid_t);
+extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t *__restrict, uid_t);
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) UIWindow *window;
@@ -58,7 +58,7 @@ extern int posix_spawnattr_set_persona_gid_np(const posix_spawnattr_t* __restric
     dictionary = [NSDictionary dictionaryWithContentsOfFile:plistPath];
     CFBundleSignature = @[dictionary[@"CFBundleSignature"]];
 
-    path = [[NSBundle mainBundle].bundlePath stringByAppendingPathComponent:@"mussel"];
+    path = [[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"mussel"];
 
     NSLog(@"[%s] Protocol: %@ | Path: %@\n", __PRETTY_FUNCTION__, CFBundleSignature[0], path);
     return [self spawnProcess:path args:CFBundleSignature];

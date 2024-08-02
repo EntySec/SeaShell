@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import datetime
 import os
+import datetime
 
 from badges import Badges
 from typing import Optional, Union
@@ -34,20 +34,12 @@ from pex.string import String
 from seashell.lib.config import Config
 
 
-class Loot(String, FS):
+class Loot(Config, Badges, String, FS):
     """ Subclass of seashell.lib module.
 
     This subclass of seashell.lib module is intended for providing
     tools for working with loot collected by SeaShell.
     """
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.badges = Badges()
-
-        self.loot = Config().loot_path
-        self.data = Config().data_path
 
     def create_loot(self) -> None:
         """ Create loot directory in workspace.
@@ -55,8 +47,8 @@ class Loot(String, FS):
         :return None: None
         """
 
-        if not os.path.isdir(self.loot):
-            os.mkdir(self.loot)
+        if not os.path.isdir(self.loot_path):
+            os.mkdir(self.loot_path)
 
     def specific_loot(self, filename: str) -> str:
         """ Return full path to the specific file
@@ -66,7 +58,7 @@ class Loot(String, FS):
         :return str: path to the file
         """
 
-        return self.loot + filename
+        return self.loot_path + filename
 
     def random_loot(self, extension: Optional[str] = None) -> str:
         """ Generate random loot path and add extension (if specified).
@@ -80,7 +72,7 @@ class Loot(String, FS):
         if extension:
             filename += '.' + extension
 
-        return self.loot + filename
+        return self.loot_path + filename
 
     def get_file(self, filename: str) -> bytes:
         """ Get specific file contents.
@@ -121,7 +113,7 @@ class Loot(String, FS):
             with open(location, 'wb') as f:
                 f.write(data)
 
-            self.badges.print_success(f"Saved to {location}!")
+            self.print_success(f"Saved to {location}!")
             return os.path.abspath(location)
 
         return None
@@ -146,7 +138,7 @@ class Loot(String, FS):
         """
 
         filename = os.path.split(filename)[1]
-        return self.get_file(self.loot + filename)
+        return self.get_file(self.loot_path + filename)
 
     def save_loot(self, filename: str, data: bytes) -> Union[str, None]:
         """ Save contents to loot directory.
@@ -157,7 +149,7 @@ class Loot(String, FS):
         """
 
         filename = os.path.split(filename)[1]
-        return self.save_file(self.loot + filename, data)
+        return self.save_file(self.loot_path + filename, data)
 
     def remove_loot(self, filename: str) -> None:
         """ Remove specific loot from loot directory.
@@ -167,7 +159,7 @@ class Loot(String, FS):
         """
 
         filename = os.path.split(filename)[1]
-        self.remove_file(self.loot + filename)
+        self.remove_file(self.loot_path + filename)
 
     def get_data(self, filename: str) -> bytes:
         """ Get contents of file from data directory.
@@ -177,8 +169,8 @@ class Loot(String, FS):
         :raises RuntimeError: with trailing error message
         """
 
-        if os.path.exists(self.data + filename):
-            with open(self.data + filename, 'rb') as f:
+        if os.path.exists(self.data_path + filename):
+            with open(self.data_path + filename, 'rb') as f:
                 return f.read()
         else:
             raise RuntimeError("Invalid data given!")
@@ -191,9 +183,9 @@ class Loot(String, FS):
 
         loots = []
 
-        for loot in os.listdir(self.loot):
-            loots.append((loot, self.loot + loot, datetime.datetime.fromtimestamp(
-                os.path.getmtime(self.loot + loot)).astimezone().strftime(
+        for loot in os.listdir(self.loot_path):
+            loots.append((loot, self.loot_path + loot, datetime.datetime.fromtimestamp(
+                os.path.getmtime(self.loot_path + loot)).astimezone().strftime(
                 "%Y-%m-%d %H:%M:%S %Z")))
 
         return loots

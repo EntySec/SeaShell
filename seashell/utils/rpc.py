@@ -22,13 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import threading
 from typing import Any
-
-from seashell.core.device import (
-    Device,
-    DeviceHandler,
-)
 
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCServer
 
@@ -59,7 +53,7 @@ class RPC(object):
         """
 
         rpc = SimpleJSONRPCServer((self.host, self.port))
-        commands = self.console.custom_commands
+        commands = self.console.external
 
         for command in commands:
             name = command

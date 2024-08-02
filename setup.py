@@ -44,7 +44,6 @@ setup(
         "alive-progress",
         "pex @ git+https://github.com/EntySec/Pex",
         "badges @ git+https://github.com/EntySec/Badges",
-        "colorscript @ git+https://github.com/EntySec/ColorScript",
         "hatsploit @ git+https://github.com/EntySec/HatSploit",
     ],
     zip_safe=False,
