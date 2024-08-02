@@ -22,8 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from pex.arch.types import *
-from pex.platform.types import *
+import socket
+
+from pex.arch import ARCH_AARCH64
+from pex.platform import OS_IPHONE, OS_MACOS
 from pex.proto.tcp import TCPListener
 
 from pwny.session import PwnySession
@@ -35,7 +37,7 @@ from seashell.lib.config import Config
 from seashell.core.api import *
 
 
-class Device(object):
+class Device(Config, Badges):
     """ Subclass of seashell.core module.
 
     This subclass of seashell.core module is intended for providing
@@ -49,15 +51,10 @@ class Device(object):
         :return None: None
         """
 
-        super().__init__()
-
-        self.config = Config()
-
-        self.badges = Badges()
         self.device = session
 
         self.uuid = session.uuid
-        self.client = (session.details['Host'], session.details['Port'])
+        self.client = (session.info['Host'], session.info['Port'])
         self.server = ()
 
         self.name = None
@@ -66,11 +63,17 @@ class Device(object):
         self.serial = None
         self.udid = None
 
+        self.platform = self.device.info['Platform']
+        self.arch = self.device.info['Arch']
+
     def update_details(self) -> None:
         """ Update device details.
 
         :return None: None
         """
+
+        if self.platform != OS_IPHONE:
+            return
 
         result = self.device.send_command(tag=GATHER_GET_INFO)
 
@@ -85,6 +88,9 @@ class Device(object):
 
         :return Tuple[str, str]: tuple of latitude and longitude
         """
+
+        if self.platform != OS_IPHONE:
+            return
 
         result = self.device.send_command(tag=LOCATE_GET)
 
@@ -105,13 +111,22 @@ class Device(object):
         :return None: None
         """
 
-        self.device.load_commands(self.config.modules_path)
-        self.device.load_plugins(self.config.plugins_path)
+        if self.platform == OS_IPHONE:
+            lookup_path = 'apple_ios'
+        elif self.platform == OS_MACOS:
+            lookup_path = 'macos'
+        else:
+            lookup_path = 'generic'
+
+        self.device.console.load_external(
+            self.modules_path + lookup_path, session=self.device)
+        self.device.console.load_plugins(
+            self.plugins_path + lookup_path)
 
         self.device.interact()
 
 
-class DeviceHandler(TCPListener):
+class DeviceHandler(TCPListener, Badges):
     """ Subclass of seashell.core module.
 
     This subclass of seashell.core module is intended for providing
@@ -130,6 +145,7 @@ class DeviceHandler(TCPListener):
         super().__init__(host, port, timeout)
 
         self.badges = Badges()
+        self.address = ('', -1)
 
     def start(self) -> None:
         """ Start TCP listener.
@@ -137,8 +153,29 @@ class DeviceHandler(TCPListener):
         :return None: None
         """
 
-        self.badges.print_process(f"Listening on TCP port {str(self.port)}...")
+        self.print_process(f"Listening on TCP port {str(self.port)}...")
         self.listen()
+
+    def wrap(self, client: socket.socket) -> Device:
+        """ Wrap socket with device object.
+
+        :param socket.socket client: client to wrap
+        :return Device: device instance
+        """
+
+        session = PwnySession()
+        session.info.update({
+            'Host': self.address[0],
+            'Port': self.port,
+        })
+        session.open(client)
+        session.identify()
+
+        device = Device(session)
+        device.server = self.server
+        session.device = device
+
+        return device
 
     def handle(self) -> Device:
         """ Accept connection and wrap it with Device.
@@ -147,21 +184,9 @@ class DeviceHandler(TCPListener):
         """
 
         self.accept()
+        device = self.wrap(self.client)
 
-        session = PwnySession()
-        session.details.update({
-            'Platform': OS_IPHONE,
-            'Arch': ARCH_AARCH64,
-            'Host': self.address[0],
-            'Port': self.port,
-        })
-        session.open(self.client)
-
-        device = Device(session)
-        device.server = self.server
-        session.device = device
-
-        self.badges.print_success(
+        self.print_success(
             f"New device connected - {self.address[0]}!")
 
         return device

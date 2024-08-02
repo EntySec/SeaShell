@@ -32,7 +32,14 @@ bundle_id = 'com.entysec.mussel'
 binary_name = 'main'
 
 
-def generate_plist(host, port):
+def generate_plist(host: str, port: int) -> dict:
+    """ Generate Info.plist file contents.
+
+    :param str host: host to connect to
+    :param int port: port to connect to
+    :return dict: Info.plist contents
+    """
+
     return {
         'CFBundleDevelopmentRegion': 'en',
         'CFBundleDisplayName': app_name,
@@ -54,7 +61,12 @@ def generate_plist(host, port):
     }
 
 
-def main():
+def main() -> None:
+    """ Entry point for CLI.
+
+    :return None: None
+    """
+
     if len(sys.argv) < 4:
         print(f'Usage: {sys.argv[0]} <host> <port> <path>')
         return

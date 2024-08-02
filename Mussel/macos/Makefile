@@ -22,43 +22,46 @@
 # SOFTWARE.
 #
 
-APP_DIR  = Mussel.app
-IPA_FILE = Mussel.ipa
-SYSROOT  = /Users/felix/Desktop/iOS-SDKs/iPhoneOS14.5.sdk
+APP_DIR      = Mussel.app
+ARCHIVE      = $(APP_DIR).tar.gz
+CONTENTS_DIR = $(APP_DIR)/Contents
+INSTALL_DIR  = ../../seashell/data
+IPA_FILE     = Mussel.zip
+SYSROOT      = /Users/felix/Desktop/iOS-SDKs/iPhoneOS14.5.sdk
 
-OBJS  = $(addprefix $(APP_DIR)/,main Info.plist)
+OBJS  = $(CONTENTS_DIR)/Info.plist $(CONTENTS_DIR)/MacOS/main
 ARCHS = -arch arm64
 
-HOST = 192.168.2.116
+CC     = clang
+CFLAGS = $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -lobjc -o
+
+SIGN       = codesign
+SIGN_FLAGS = -s EntySec --entitlements deps/sign.plist
+
+HOST = 127.0.0.1
 PORT = 8888
 
-.PHONY: all clean ipa
+.PHONY: all clean app
 
 all: $(OBJS)
 
-$(APP_DIR)/main: main.m
-	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -framework UIKit -lobjc -o $@ $<
-	ldid -Sdeps/sign.plist $@
+$(CONTENTS_DIR)/MacOS/main: main.m
+	$(CC) $(CFLAGS) $@ $<
+	$(SIGN) $(SIGN_FLAGS) $@
 
-$(APP_DIR)/Info.plist:
-	python3 deps/plist.py $(HOST) $(PORT) $(APP_DIR)/Info.plist
+$(CONTENTS_DIR)/Info.plist:
+	python3 deps/plist.py $(HOST) $(PORT) $@
 
-$(OBJS): | $(APP_DIR)
+$(OBJS): | $(CONTENTS_DIR)
 
-$(APP_DIR):
-	mkdir -p $(APP_DIR)
+$(CONTENTS_DIR):
+	mkdir -p $(CONTENTS_DIR)/MacOS
 
-hook: hook.m
-	clang $(ARCHS) -isysroot $(SYSROOT) -framework Foundation -lobjc -o $@ $<
-	ldid -Sdeps/sign.plist $@
-	ct_bypass -i $@ -o $@ -r
+app: $(CONTENTS_DIR)
+	tar -czvf $(ARCHIVE) $(APP_DIR)
 
-ipa: $(APP_DIR)
-	mkdir Payload
-	cp -r $(APP_DIR) Payload/
-	zip -r $(IPA_FILE) Payload/
-	rm -rf Payload/
+install: $(OBJS)
+	cp -r $(CONTENTS_DIR) $(INSTALL_DIR)
 
 clean:
-	rm -rf $(APP_DIR) $(IPA_FILE)
-
+	rm -rf $(APP_DIR) $(ARCHIVE)

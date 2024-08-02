@@ -33,21 +33,19 @@ class Config(object):
     basic configuration for SeaShell.
     """
 
-    def __init__(self) -> None:
-        super().__init__()
+    user_path = f'{pathlib.Path.home()}/.seashell/'
+    base_path = f'{os.path.dirname(os.path.dirname(__file__))}/'
+    data_path = base_path + 'data/'
 
-        self.user_path = f'{pathlib.Path.home()}/.seashell/'
-        self.base_path = f'{os.path.dirname(os.path.dirname(__file__))}/'
-        self.data_path = self.base_path + 'data/'
+    banners_path = data_path + 'banners/'
+    tips_path = data_path + 'tips/'
 
-        self.banners_path = self.data_path + 'banners/'
-        self.tips_path = self.data_path + 'tips/'
+    modules_path = base_path + 'modules/'
+    plugins_path = base_path + 'plugins/'
+    commands_path = base_path + 'commands/'
 
-        self.modules_path = self.base_path + 'modules/'
-        self.plugins_path = self.base_path + 'plugins/'
-        self.commands_path = self.base_path + 'commands/'
-
-        self.loot_path = self.user_path + 'loot/'
+    loot_path = user_path + 'loot/'
+    history_path = user_path + 'history.txt'
 
     def setup(self) -> None:
         """ Setup config and create paths.

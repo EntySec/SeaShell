@@ -29,41 +29,32 @@ import plistlib
 from PIL import Image
 from alive_progress import alive_bar
 from pex.string import String
-from typing import Optional
 
 from seashell.lib.config import Config
 
 
-class IPA(object):
+class IPA(Config):
     """ Subclass of seashell.core module.
 
     This subclass of seashell.core module is intended for providing
     an implementation of iOS Application Archive generator.
     """
 
-    def __init__(self, host: Optional[str] = None,
-                 port: Optional[int] = None) -> None:
+    def __init__(self, host: str, port: int) -> None:
         """ Initialize device generator.
 
-        :param Optional[str] host: host
-        :param Optional[int] port: port
+        :param str host: host to connect to
+        :param int port: port to connect to
         :return None: None
         """
 
-        super().__init__()
-
-        self.config = Config()
-
-        if host and port:
-            self.hash = String().base64_string(
-                f'tcp://{host}:{str(port)}', decode=True)
-        else:
-            self.hash = ''
+        self.hash = String().base64_string(
+            f'tcp://{str(host)}:{str(port)}', decode=True)
 
         self.app_name = 'Mussel'
         self.bundle_id = 'com.entysec.mussel'
         self.binary_name = 'main'
-        self.icon = self.config.data_path + 'AppIcon.png'
+        self.icon = self.data_path + 'AppIcon.png'
 
     def set_name(self, name: str, bundle_id: str) -> None:
         """ Set application name.
@@ -97,62 +88,59 @@ class IPA(object):
 
         with alive_bar(monitor=False, stats=False, ctrl_c=False, receipt=False,
                        title="Building {}".format(path)) as _:
-            self.craft_icons()
-            self.craft_plist()
-
             return self.build_ipa(path)
 
-    def craft_icons(self) -> None:
+    def craft_icons(self, path: str) -> None:
         """ Craft icons.
 
+        :param str path: directory where to save generated icons
         :return None: None
         """
 
         image = Image.open(self.icon)
-        app = self.config.data_path + 'Mussel.app/'
 
         image.resize((29, 29), Image.LANCZOS).save(
-            app + 'AppIcon29x29.png', 'PNG', quality=100)
+            path + '/AppIcon29x29.png', 'PNG', quality=100)
         image.resize((29 * 2, 29 * 2), Image.LANCZOS).save(
-            app + 'AppIcon29x29@2x.png', 'PNG', quality=100)
+            path + '/AppIcon29x29@2x.png', 'PNG', quality=100)
         image.resize((29 * 3, 29 * 3), Image.LANCZOS).save(
-            app + 'AppIcon29x29@3x.png', 'PNG', quality=100)
+            path + '/AppIcon29x29@3x.png', 'PNG', quality=100)
 
         image.resize((40, 40), Image.LANCZOS).save(
-            app + 'AppIcon40x40.png', 'PNG', quality=100)
+            path + '/AppIcon40x40.png', 'PNG', quality=100)
         image.resize((40 * 2, 40 * 2), Image.LANCZOS).save(
-            app + 'AppIcon40x40@2x.png', 'PNG', quality=100)
+            path + '/AppIcon40x40@2x.png', 'PNG', quality=100)
         image.resize((40 * 3, 40 * 3), Image.LANCZOS).save(
-            app + 'AppIcon40x40@3x.png', 'PNG', quality=100)
+            path + '/AppIcon40x40@3x.png', 'PNG', quality=100)
 
         image.resize((50, 50), Image.LANCZOS).save(
-            app + 'AppIcon50x50.png', 'PNG', quality=100)
+            path + '/AppIcon50x50.png', 'PNG', quality=100)
         image.resize((50 * 2, 50 * 2), Image.LANCZOS).save(
-            app + 'AppIcon50x50@2x.png', 'PNG', quality=100)
+            path + '/AppIcon50x50@2x.png', 'PNG', quality=100)
 
         image.resize((57, 57), Image.LANCZOS).save(
-            app + 'AppIcon57x57.png', 'PNG', quality=100)
+            path + '/AppIcon57x57.png', 'PNG', quality=100)
         image.resize((57 * 2, 57 * 2), Image.LANCZOS).save(
-            app + 'AppIcon57x57@2x.png', 'PNG', quality=100)
+            path + '/AppIcon57x57@2x.png', 'PNG', quality=100)
         image.resize((57 * 3, 57 * 3), Image.LANCZOS).save(
-            app + 'AppIcon57x57@3x.png', 'PNG', quality=100)
+            path + '/AppIcon57x57@3x.png', 'PNG', quality=100)
 
         image.resize((60, 60), Image.LANCZOS).save(
-            app + 'AppIcon60x60.png', 'PNG', quality=100)
+            path + '/AppIcon60x60.png', 'PNG', quality=100)
         image.resize((60 * 2, 60 * 2), Image.LANCZOS).save(
-            app + 'AppIcon60x60@2x.png', 'PNG', quality=100)
+            path + '/AppIcon60x60@2x.png', 'PNG', quality=100)
         image.resize((60 * 3, 60 * 3), Image.LANCZOS).save(
-            app + 'AppIcon60x60@3x.png', 'PNG', quality=100)
+            path + '/AppIcon60x60@3x.png', 'PNG', quality=100)
 
         image.resize((72, 72), Image.LANCZOS).save(
-            app + 'AppIcon72x72.png', 'PNG', quality=100)
+            path + '/AppIcon72x72.png', 'PNG', quality=100)
         image.resize((72 * 2, 72 * 2), Image.LANCZOS).save(
-            app + 'AppIcon72x72@2x.png', 'PNG', quality=100)
+            path + '/AppIcon72x72@2x.png', 'PNG', quality=100)
 
         image.resize((76, 76), Image.LANCZOS).save(
-            app + 'AppIcon76x76.png', 'PNG', quality=100)
+            path + '/AppIcon76x76.png', 'PNG', quality=100)
         image.resize((76 * 2, 76 * 2), Image.LANCZOS).save(
-            app + 'AppIcon76x76@2x.png', 'PNG', quality=100)
+            path + '/AppIcon76x76@2x.png', 'PNG', quality=100)
 
     def build_ipa(self, path: str) -> str:
         """ Build IPA.
@@ -172,8 +160,13 @@ class IPA(object):
 
         os.mkdir(app)
         os.mkdir(payload)
+        bundle = payload + self.app_name + '.app'
 
-        shutil.copytree(self.config.data_path + 'Mussel.app', payload + self.app_name + '.app')
+        shutil.copytree(self.data_path + 'Mussel.app', bundle)
+
+        self.craft_icons(bundle)
+        self.craft_plist(bundle)
+
         shutil.make_archive(archive, 'zip', app)
         shutil.move(archive + '.zip', archive)
         shutil.rmtree(app)
@@ -219,17 +212,14 @@ class IPA(object):
 
         return ''
 
-    def craft_plist(self) -> None:
+    def craft_plist(self, path: str) -> None:
         """ Craft plist file.
 
+        :param str path: directory to save Info.plist
         :return None: None
         """
 
-        plist_path = (
-                self.config.data_path +
-                'Mussel.app/Info.plist'
-        )
-
+        plist_path = path + '/Info.plist'
         plist = {
             'CFBundleDevelopmentRegion': 'en',
             'CFBundleDisplayName': self.app_name,

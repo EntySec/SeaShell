@@ -26,14 +26,15 @@ import os
 import shutil
 import plistlib
 
-from alive_progress import alive_bar
 from typing import Optional
+
+from alive_progress import alive_bar
 from pex.string import String
 
 from seashell.lib.config import Config
 
 
-class Hook(object):
+class Hook(Config):
     """ Subclass of seashell.core module.
 
     This subclass of seashell.core module is intended for providing
@@ -49,16 +50,14 @@ class Hook(object):
         :return None: None
         """
 
-        self.config = Config()
-
         if host and port:
             self.hash = String().base64_string(
                 f'tcp://{host}:{str(port)}', decode=True)
         else:
             self.hash = ''
 
-        self.main = self.config.data_path + 'hook'
-        self.mussel = self.config.data_path + 'Mussel.app/mussel'
+        self.main = self.data_path + 'hook'
+        self.mussel = self.data_path + 'Mussel.app/mussel'
 
     def patch_ipa(self, path: str) -> None:
         """ Patch existing IPA.

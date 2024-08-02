@@ -3,14 +3,12 @@ This command requires SeaShell: https://github.com/EntySec/SeaShell
 Current source: https://github.com/EntySec/SeaShell
 """
 
-from hatsploit.lib.command import Command
+from badges.cmd import Command
 
 
-class HatSploitCommand(Command):
+class ExternalCommand(Command):
     def __init__(self):
-        super().__init__()
-
-        self.details = {
+        super().__init__({
             'Category': "manage",
             'Name': "devices",
             'Authors': [
@@ -20,11 +18,11 @@ class HatSploitCommand(Command):
             'Usage': "devices <option> [arguments]",
             'MinArgs': 1,
             'Options': {
-                '-l': ['', 'List connected devices.'],
-                '-k': ['<id>', 'Kill device by ID.'],
-                '-i': ['<id>', 'Interact device by ID.'],
+                'list': ['', 'List connected devices.'],
+                'kill': ['<id>', 'Kill device by ID.'],
+                'interact': ['<id>', 'Interact device by ID.'],
             }
-        }
+        })
 
     def rpc(self, *args):
         if len(args) < 1:
@@ -34,10 +32,10 @@ class HatSploitCommand(Command):
             return self.console.devices
 
         if args[0] == 'kill':
-            return self.run(3, [self.details['Name'], '-k', args[1]])
+            return self.run([self.info['Name'], 'kill', args[1]])
 
-    def run(self, argc, argv):
-        if argv[1] == '-l':
+    def run(self, args):
+        if args[1] == 'list':
             if not self.console.devices:
                 self.print_warning("No devices connected.")
                 return
@@ -45,14 +43,15 @@ class HatSploitCommand(Command):
             devices = []
 
             for device in self.console.devices:
+                info = self.console.devices[device]
+
                 devices.append(
-                    (device, self.console.devices[device]['host'],
-                        self.console.devices[device]['port']))
+                    (device, info['host'], info['port'], info['platform']))
 
-            self.print_table("Connected Devices", ('ID', 'Host', 'Port'), *devices)
+            self.print_table("Connected Devices", ('ID', 'Host', 'Port', 'Platform'), *devices)
 
-        elif argv[1] == '-k':
-            device_id = int(argv[2])
+        elif args[1] == 'kill':
+            device_id = int(args[2])
 
             if device_id not in self.console.devices:
                 self.print_error("Invalid device ID!")
@@ -61,16 +60,12 @@ class HatSploitCommand(Command):
             self.console.devices[device_id]['device'].kill()
             self.console.devices.pop(device_id)
 
-        elif argv[1] == '-i':
-            device_id = int(argv[2])
+        elif args[1] == 'interact':
+            device_id = int(args[2])
 
             if device_id not in self.console.devices:
                 self.print_error("Invalid device ID!")
                 return
 
             self.print_process(f"Interacting with device {str(device_id)}...")
-
-            self.console.prompt_fill = \
-                self.console.devices[device_id]['device'].device.prompt
             self.console.devices[device_id]['device'].interact()
-            self.console.prompt_fill = self.console.prompt

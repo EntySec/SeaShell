@@ -32,20 +32,12 @@ from badges import Badges
 from seashell.lib.config import Config
 
 
-class Tip(object):
+class Tip(Config, Badges):
     """ Subclass of seashell.core module.
 
     This subclass of seashell.core module is intended for
     providing tools for printing tips in UI.
     """
-
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.config = Config()
-
-        self.badges = Badges()
-        self.color_script = ColorScript()
 
     def print_random_tip(self) -> None:
         """ Print random tip.
@@ -53,24 +45,19 @@ class Tip(object):
         :return None: None
         """
 
-        if os.path.exists(self.config.tips_path):
-            tips = []
-            all_tips = os.listdir(self.config.tips_path)
+        if not os.path.exists(self.tips_path):
+            self.print_warning("No tips detected.")
+            return
 
-            for tip in all_tips:
-                tips.append(tip)
+        tips = list(os.listdir(self.tips_path))
 
-            if tips:
-                tip = ""
+        if not tips:
+            self.print_warning("No tips detected.")
+            return
 
-                while not tip:
-                    random_tip = random.randint(0, len(tips) - 1)
-                    tip = self.color_script.parse_file(
-                        self.config.tips_path + tips[random_tip]
-                    )
+        random_tip = random.randint(0, len(tips) - 1)
+        tip = ColorScript().parse_file(
+            self.tips_path + tips[random_tip]
+        )
 
-                self.badges.print_empty(f"%newline%endSeaShell Tip: {tip}%end%newline")
-            else:
-                self.badges.print_warning("No tips detected.")
-        else:
-            self.badges.print_warning("No tips detected.")
+        self.print_empty(f"%newline%endSeaShell Tip: {tip}%end%newline")
