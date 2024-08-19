@@ -19,11 +19,8 @@ class ExternalCommand(Command):
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "Build APP fil and save as ZIP.",
-            'Usage': "app <option> [arguments]",
+            'Usage': "app [build]",
             'MinArgs': 1,
-            'Options': {
-                'build': ['', 'Build brand new APP file.']
-            }
         })
 
     def rpc(self, *args):

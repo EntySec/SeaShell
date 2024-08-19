@@ -19,14 +19,31 @@ class ExternalCommand(Command):
             'Authors': [
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
-            'Description': "Build or patch IPA file.",
-            'Usage': "ipa <option> [arguments]",
+            'Description': "Manage IPA file generator.",
             'MinArgs': 1,
-            'Options': {
-                'check': ['<file>', 'Check if IPA is built or patched.'],
-                'patch': ['<file>', 'Patch existing IPA file.'],
-                'build': ['', 'Build brand new IPA file.']
-            }
+            'Options': [
+                (
+                    ('-c', '--check'),
+                    {
+                        'help': "Check if IPA file is infected.",
+                        'metavar': 'FILE',
+                    }
+                ),
+                (
+                    ('-p', '--patch'),
+                    {
+                        'help': "Patch existing IPA file.",
+                        'metavar': 'FILE'
+                    }
+                ),
+                (
+                    ('-b', '--build'),
+                    {
+                        'help': 'Build new IPA file.',
+                        'action': 'store_true'
+                    }
+                )
+            ]
         })
 
     def rpc(self, *args):
@@ -44,14 +61,14 @@ class ExternalCommand(Command):
     def run(self, args):
         local_host = TCPTools.get_local_host()
 
-        if args[1] == 'check':
-            if IPA(None, None).check_ipa(args[2]):
+        if args.check:
+            if IPA(None, None).check_ipa(args.check):
                 self.print_information("IPA is built or patched.")
             else:
                 self.print_information("IPA is original.")
 
-        elif args[1] == 'patch':
-            if IPA(None, None).check_ipa(args[2]):
+        elif args.patch:
+            if IPA(None, None).check_ipa(args.patch):
                 self.print_warning("This IPA was already patched.")
                 return
 
@@ -62,11 +79,11 @@ class ExternalCommand(Command):
             port = port or 8888
 
             hook = Hook(host, port)
-            hook.patch_ipa(args[2])
+            hook.patch_ipa(args.patch)
 
-            self.print_success(f"IPA at {args[2]} patched!")
+            self.print_success(f"IPA at {args.patch} patched!")
 
-        elif args[1] == 'build':
+        elif args.build:
             name = self.input_arrow("Application name (Mussel): ")
             bundle_id = self.input_arrow("Bundle ID (com.entysec.mussel): ")
 
