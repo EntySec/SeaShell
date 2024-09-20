@@ -1,0 +1,41 @@
+%comment
+%comment MIT License
+%comment
+%comment Copyright (c) 2020-2024 EntySec
+%comment
+%comment Permission is hereby granted, free of charge, to any person obtaining a copy
+%comment of this software and associated documentation files (the "Software"), to deal
+%comment in the Software without restriction, including without limitation the rights
+%comment to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+%comment copies of the Software, and to permit persons to whom the Software is
+%comment furnished to do so, subject to the following conditions:
+%comment
+%comment The above copyright notice and this permission notice shall be included in all
+%comment copies or substantial portions of the Software.
+%comment
+%comment THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+%comment IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+%comment FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+%comment AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+%comment LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+%comment OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+%comment SOFTWARE.
+%comment
+
+%end
+                   %dark|%end
+                  %dark|  |%end
+                     %dark|%end
+                 %red_ %green/%red_%end     %bold%dark%yellowDip the Apples in the Honey%end
+            %dark|%end   %red( `' )%end
+             %dark|%end   %red`~~'%end
+           %dark|         |%end
+            %red_%green /%red_%end   %dark|  |%end
+           %red( `' )  _%end%green\ %red_%end
+       %yellow__---%red%yellow`~~'%end%yellow--%red( `' )%end%yellow--__
+      %dark%yellow|||||||||||||||||||||||
+       |  _ _ _  __   ___  |
+       |  \_|_/  __|_   |  |
+        \_________________/
+%newline
+%end

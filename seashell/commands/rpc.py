@@ -17,26 +17,34 @@ class ExternalCommand(Command):
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "Manage RPC server.",
-            'Usage': "rpc <option> [arguments]",
-            'MinArgs': 1,
-            'Options': {
-                'on': ['<host> <port>', 'Turn RPC server on.'],
-                'off': ['', 'Turn RPC server off.'],
-            }
+            'Options': [
+                (
+                    ('-L',),
+                    {
+                        'help': "Host to start RPC server on.",
+                        'metavar': 'HOST',
+                        'dest': 'host'
+                    }
+                ),
+                (
+                    ('-p', '--port'),
+                    {
+                        'help': "Port to start RPC server on.",
+                        'metavar': 'PORT',
+                        'type': int,
+                        'required': True
+                    }
+                )
+            ]
         })
 
-        self.rpc = None
+        self.rpc = {}
 
     def run(self, args):
-        if args[1] == 'on':
-            if self.rpc:
-                self.print_warning("RPC server is already running.")
-                return
+        if args.port in self.rpc:
+            self.print_warning("RPC server is already running.")
+            return
 
-            self.rpc = RPC(self.console, args[2], args[3])
-            self.rpc.run()
-
-        elif args[1] == 'off':
-            if not self.rpc:
-                self.print_warning("RPC server is not running.")
-                return
+        self.rpc[args.port] = RPC(
+            self.console, args.host or '0.0.0.0', args.port)
+        self.rpc[args.port].run()

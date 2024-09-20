@@ -18,12 +18,17 @@ class ExternalCommand(Command):
             'Authors': [
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
-            'Description': "Build APP fil and save as ZIP.",
-            'Usage': "app <option> [arguments]",
+            'Description': "Build APP file and save as ZIP.",
             'MinArgs': 1,
-            'Options': {
-                'build': ['', 'Build brand new APP file.']
-            }
+            'Options': [
+                (
+                    ('-b', '--build'),
+                    {
+                        'help': 'Build new IPA file.',
+                        'action': 'store_true'
+                    }
+                )
+            ]
         })
 
     def rpc(self, *args):
@@ -37,7 +42,7 @@ class ExternalCommand(Command):
     def run(self, args):
         local_host = TCPTools.get_local_host()
 
-        if args[1] == 'build':
+        if args.build:
             name = self.input_arrow("Application name (Mussel): ")
             bundle_id = self.input_arrow("Bundle ID (com.entysec.mussel): ")
 

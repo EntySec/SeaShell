@@ -1,5 +1,5 @@
 <h3 align="left">
-    <img src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/logo.png" alt="logo" height="250px">
+    <img src="seashell/data/logo.png" alt="logo" height="250px">
 </h3>
 
 [![Developer](https://img.shields.io/badge/developer-EntySec-blue.svg)](https://entysec.com)
@@ -42,7 +42,7 @@ pip3 install --force-reinstall git+https://github.com/EntySec/SeaShell
 Simply generate custom IPA file or patch existing one and install it on target's iPhone or iPad via [TrollStore](https://trollstore.app/) or other IPA installer that bypasses CoreTrust.
 
 <p align="center">
-  <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/ipa.svg">
+  <img width="70%" src="seashell/data/preview/ipa.svg">
 </p>
 
 ### Starting listener
@@ -50,7 +50,7 @@ Simply generate custom IPA file or patch existing one and install it on target's
 Then you will need to start a listener on a host and port you added to your IPA. Once the installed application opens, you will receive a connection.
 
 <p align="center">
-  <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/listen.svg">
+  <img width="70%" src="seashell/data/preview/listen.svg">
 </p>
 
 ### Accessing device
@@ -58,7 +58,7 @@ Then you will need to start a listener on a host and port you added to your IPA.
 Once you have received the connection, you will be able to communicate with the session through a [Pwny](https://github.com/EntySec/Pwny) interactive shell. Use `devices -i <id>` to interact and `help` to view list of all available commands. You can even extract Safari history like in the example below.
 
 <p align="center">
-  <img width="70%" src="https://raw.githubusercontent.com/EntySec/SeaShell/main/seashell/data/preview/safari.svg">
+  <img width="70%" src="seashell/data/preview/safari.svg">
 </p>
 
 ## Available commands
@@ -66,7 +66,7 @@ Once you have received the connection, you will be able to communicate with the 
 Find the map of available commands. New commands/modules being added regularly so this list might be outdated.
 
 <h3 align="center">
-    <img width="100%" src="https://github.com/EntySec/SeaShell/blob/main/seashell/data/builtins.png">
+    <img width="100%" src="seashell/data/builtins.png">
 </h3>
 
 ## Covering them All

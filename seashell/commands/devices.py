@@ -15,13 +15,32 @@ class ExternalCommand(Command):
                 'Ivan Nikolskiy (enty8080) - command developer'
             ],
             'Description': "Manage connected devices.",
-            'Usage': "devices <option> [arguments]",
             'MinArgs': 1,
-            'Options': {
-                'list': ['', 'List connected devices.'],
-                'kill': ['<id>', 'Kill device by ID.'],
-                'interact': ['<id>', 'Interact device by ID.'],
-            }
+            'Options': [
+                (
+                    ('-l', '--list'),
+                    {
+                        'help': "List connected devices.",
+                        'action': 'store_true'
+                    }
+                ),
+                (
+                    ('-k', '--kill'),
+                    {
+                        'help': "Kill connected device by ID.",
+                        'metavar': 'ID',
+                        'type': int
+                    }
+                ),
+                (
+                    ('-i', '--interact'),
+                    {
+                        'help': "Interact connected device by ID.",
+                        'metavar': 'ID',
+                        'type': int
+                    }
+                )
+            ],
         })
 
     def rpc(self, *args):
@@ -35,7 +54,7 @@ class ExternalCommand(Command):
             return self.run([self.info['Name'], 'kill', args[1]])
 
     def run(self, args):
-        if args[1] == 'list':
+        if args.list:
             if not self.console.devices:
                 self.print_warning("No devices connected.")
                 return
@@ -48,24 +67,22 @@ class ExternalCommand(Command):
                 devices.append(
                     (device, info['host'], info['port'], info['platform']))
 
-            self.print_table("Connected Devices", ('ID', 'Host', 'Port', 'Platform'), *devices)
+            self.print_table("Connected Devices",
+                             ('ID', 'Host', 'Port', 'Platform'), *devices)
 
-        elif args[1] == 'kill':
-            device_id = int(args[2])
-
-            if device_id not in self.console.devices:
+        elif args.kill is not None:
+            if args.kill not in self.console.devices:
                 self.print_error("Invalid device ID!")
                 return
 
-            self.console.devices[device_id]['device'].kill()
-            self.console.devices.pop(device_id)
+            self.console.devices[args.kill]['device'].kill()
+            self.console.devices.pop(args.kill)
 
-        elif args[1] == 'interact':
-            device_id = int(args[2])
-
-            if device_id not in self.console.devices:
+        elif args.interact is not None:
+            if args.interact not in self.console.devices:
                 self.print_error("Invalid device ID!")
                 return
 
-            self.print_process(f"Interacting with device {str(device_id)}...")
-            self.console.devices[device_id]['device'].interact()
+            self.print_process(
+                f"Interacting with device {str(args.interact)}...")
+            self.console.devices[args.interact]['device'].interact()
