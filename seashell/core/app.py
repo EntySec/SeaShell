@@ -32,6 +32,16 @@ from alive_progress import alive_bar
 from seashell.lib.config import Config
 
 
+def _sanitize_app_name(name: str) -> str:
+    safe = os.path.basename(name)
+    if os.path.altsep:
+        safe = safe.replace(os.path.altsep, '')
+    safe = safe.replace(os.path.sep, '')
+    if safe in ('', '.', '..'):
+        return ''
+    return safe
+
+
 class App(Config):
     """ Subclass of seashell.core module.
 
@@ -64,7 +74,9 @@ class App(Config):
         """
 
         if name:
-            self.app_name = name.lower().title()
+            safe = _sanitize_app_name(name)
+            if safe:
+                self.app_name = safe.lower().title()
 
         if bundle_id:
             self.bundle_id = bundle_id

@@ -25,6 +25,8 @@ SOFTWARE.
 import os
 import shutil
 import plistlib
+import tempfile
+import zipfile
 
 from typing import Optional
 
@@ -32,6 +34,26 @@ from alive_progress import alive_bar
 from pex.string import String
 
 from seashell.lib.config import Config
+
+
+def _safe_extract_zip(archive_path: str, extract_dir: str) -> None:
+    base = os.path.realpath(extract_dir)
+    with zipfile.ZipFile(archive_path) as zf:
+        for member in zf.namelist():
+            target = os.path.realpath(os.path.join(base, member))
+            if not target.startswith(base + os.sep):
+                raise RuntimeError("Unsafe path in archive")
+        zf.extractall(extract_dir)
+
+
+def _sanitize_executable(name: str) -> str:
+    if not name or name in ('.', '..'):
+        return ''
+    if os.path.sep in name or (os.path.altsep and os.path.altsep in name):
+        return ''
+    if '..' in name:
+        return ''
+    return name
 
 
 class Hook(Config):
@@ -68,32 +90,39 @@ class Hook(Config):
 
         with alive_bar(monitor=False, stats=False, ctrl_c=False, receipt=False,
                        title="Patching {}".format(path)) as _:
-            shutil.unpack_archive(path, format='zip')
-            app_files = [file for file in os.listdir('Payload') if file.endswith('.app')]
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                _safe_extract_zip(path, tmp_dir)
+                payload = os.path.join(tmp_dir, 'Payload')
 
-            if not app_files:
-                return
+                if not os.path.isdir(payload):
+                    return
 
-            bundle = '/'.join(('Payload', app_files[0] + '/'))
-            executable = self.get_executable(bundle + 'Info.plist')
+                app_files = [file for file in os.listdir(payload) if file.endswith('.app')]
+                if not app_files:
+                    return
 
-            self.patch_plist(bundle + 'Info.plist')
+                bundle = os.path.join(payload, app_files[0])
+                plist_path = os.path.join(bundle, 'Info.plist')
+                executable = self.get_executable(plist_path)
 
-            shutil.move(bundle + executable, bundle + executable + '.hooked')
-            shutil.copy(self.main, bundle + executable)
-            shutil.copy(self.mussel, bundle + 'mussel')
+                if not executable:
+                    return
 
-            os.chmod(bundle + executable, 777)
-            os.chmod(bundle + 'mussel', 777)
+                self.patch_plist(plist_path)
 
-            app = path[:-4]
-            os.remove(path)
+                shutil.move(
+                    os.path.join(bundle, executable),
+                    os.path.join(bundle, executable + '.hooked')
+                )
+                shutil.copy(self.main, os.path.join(bundle, executable))
+                shutil.copy(self.mussel, os.path.join(bundle, 'mussel'))
 
-            os.mkdir(app)
-            shutil.move('Payload', app)
-            shutil.make_archive(path, 'zip', app)
-            shutil.move(path + '.zip', path)
-            shutil.rmtree(app)
+                os.chmod(os.path.join(bundle, executable), 0o777)
+                os.chmod(os.path.join(bundle, 'mussel'), 0o777)
+
+                os.remove(path)
+                shutil.make_archive(path, 'zip', tmp_dir, 'Payload')
+                shutil.move(path + '.zip', path)
 
     @staticmethod
     def get_executable(path: str) -> str:
@@ -107,7 +136,7 @@ class Hook(Config):
             plist_data = plistlib.load(f)
 
         if 'CFBundleExecutable' in plist_data:
-            return plist_data['CFBundleExecutable']
+            return _sanitize_executable(plist_data['CFBundleExecutable'])
 
         return ''
 

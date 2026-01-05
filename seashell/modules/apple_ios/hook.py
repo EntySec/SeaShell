@@ -92,6 +92,9 @@ class ExternalCommand(Command):
         hook.patch_plist(self.plist)
 
         executable = hook.get_executable(self.plist)
+        if not executable:
+            self.print_error("Invalid executable path in Info.plist!")
+            return
         self.print_information(F"Executable to replace: {executable}")
 
         if not self.session.upload(self.plist, path + '/Info.plist'):

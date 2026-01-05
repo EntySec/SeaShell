@@ -25,12 +25,34 @@ SOFTWARE.
 import os
 import shutil
 import plistlib
+import tempfile
+import zipfile
 
 from PIL import Image
 from alive_progress import alive_bar
 from pex.string import String
 
 from seashell.lib.config import Config
+
+
+def _safe_extract_zip(archive_path: str, extract_dir: str) -> None:
+    base = os.path.realpath(extract_dir)
+    with zipfile.ZipFile(archive_path) as zf:
+        for member in zf.namelist():
+            target = os.path.realpath(os.path.join(base, member))
+            if not target.startswith(base + os.sep):
+                raise RuntimeError("Unsafe path in archive")
+        zf.extractall(extract_dir)
+
+
+def _sanitize_app_name(name: str) -> str:
+    safe = os.path.basename(name)
+    if os.path.altsep:
+        safe = safe.replace(os.path.altsep, '')
+    safe = safe.replace(os.path.sep, '')
+    if safe in ('', '.', '..'):
+        return ''
+    return safe
 
 
 class IPA(Config):
@@ -65,7 +87,9 @@ class IPA(Config):
         """
 
         if name:
-            self.app_name = name.lower().title()
+            safe = _sanitize_app_name(name)
+            if safe:
+                self.app_name = safe.lower().title()
 
         if bundle_id:
             self.bundle_id = bundle_id
@@ -182,19 +206,24 @@ class IPA(Config):
 
         with alive_bar(monitor=False, stats=False, ctrl_c=False, receipt=False,
                        title="Checking {}".format(path)) as _:
-            shutil.unpack_archive(path, format='zip')
-            app_files = [file for file in os.listdir('Payload') if file.endswith('.app')]
+            with tempfile.TemporaryDirectory() as tmp_dir:
+                _safe_extract_zip(path, tmp_dir)
+                payload = os.path.join(tmp_dir, 'Payload')
 
-            if not app_files:
-                return
+                if not os.path.isdir(payload):
+                    return False
 
-            bundle = '/'.join(('Payload', app_files[0] + '/'))
-            hash = self.get_hash(bundle + 'Info.plist')
+                app_files = [file for file in os.listdir(payload) if file.endswith('.app')]
+                if not app_files:
+                    return False
 
-            if os.path.exists(bundle + 'mussel') and hash:
-                return True
+                bundle = os.path.join(payload, app_files[0])
+                hash = self.get_hash(os.path.join(bundle, 'Info.plist'))
 
-        return False
+                if os.path.exists(os.path.join(bundle, 'mussel')) and hash:
+                    return True
+
+            return False
 
     @staticmethod
     def get_hash(path: str) -> str:

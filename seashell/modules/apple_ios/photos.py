@@ -48,16 +48,28 @@ class ExternalCommand(Command, String):
 
                 file_type = self.mode_type(hash.get('st_mode', 0))
                 path = file.get_string(TLV_TYPE_PATH)
+                name = os.path.split(path)[1]
+                if not self._safe_component(name):
+                    file = result.get_tlv(TLV_TYPE_GROUP)
+                    continue
 
                 if file_type == 'file':
                     self.session.download(
-                        path, local_path + '/' + os.path.split(path)[1])
+                        path, local_path + '/' + name)
 
                 elif file_type == 'directory':
                     self.recursive_walk(
-                        path, local_path + '/' + os.path.split(path)[1])
+                        path, local_path + '/' + name)
 
                 file = result.get_tlv(TLV_TYPE_GROUP)
+
+    @staticmethod
+    def _safe_component(name):
+        if not name or name in ('.', '..'):
+            return False
+        if os.path.sep in name or (os.path.altsep and os.path.altsep in name):
+            return False
+        return True
 
     def run(self, args):
         if args[1] == 'icloud':
